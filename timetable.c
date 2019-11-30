@@ -1,77 +1,55 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<math.h>
 #include<time.h>
 
-typedef struct Node {         // ³¯Â¥º°·Î ½Ã°£, ºĞ, ÃÊ¸¦ Æ÷ÇÔ
-	int hour, minute, second;
-	struct Node *next;
-} Node;
+typedef struct Date {			// ë‚ ì§œë³„ë¡œ ì´ë¦„, ì‹œê°„, ë¶„ì„ í¬í•¨
+	int name;
+	int time[2][200];			// time[0]ì´ ì‹œê°„, time[1]ì´ ë¶„
+	struct Date *next;
+} Date;
 
 void setDepartureTime(int* t);
-void setNode(Node* table, int* t);
-void printTable(Node* table);
+void setDate(Date* date, int* t);
+void printDate(Date* date);
 
 int main() {
-	Node table[31];         // 31°³ÀÇ ³¯Â¥
-	int t[31];            // 31°³ÀÇ ½Ã°£º¯¼ö
-	setDepartureTime(t);
-	setNode(table, t);
-	printTable(table);
+	srand((unsigned)time(NULL));
+	Date date[31];			// 31ê°œì˜ ë‚ ì§œ
+	int t[200];				// ë§¤ì¼ 200ê°œì˜ ì¶œë°œì‹œê°
+	setDate(date, t);
+	//printDate(date);
 
 	return 0;
 }
 
-void setDepartureTime(int* t) {         // Ãâ¹ß½Ã°¢ 31°³ ·£´ı»ı¼º
-	srand((unsigned)time(NULL));
+void setDepartureTime(int* t) {			// ì¶œë°œì‹œê° 31ê°œ ëœë¤ìƒì„±
+	for (int i = 0; i < 200; i++) {
+		t[i] = rand() % 1440;			// 0h 0m 0s ~ 23h 59m ëœë¤ìƒì„±
+	}
+}
+
+void setDate(Date* date, int* t) {		// ëœë¤ ìƒì„±í•œ ì‹œê°„ì„ ì‹œ,ë¶„ìœ¼ë¡œ ë‚˜ëˆ„ì–´ ë…¸ë“œì— ì €ì¥
 	for (int i = 0; i < 31; i++) {
-		int duplicate = 0;            // Áßº¹º¯¼ö(1ÀÌ¸é Áßº¹)
-		t[i] = rand() % 86400;         // 0h 0m 0s ~ 23h 59m 59s ·£´ı»ı¼º
-		for (int j = 0; j < i; j++) {
-			if (t[j] == t[i]) {
-				duplicate = 1;
-				break;
-			}
-		}
-		if (duplicate == 1) {         // Áßº¹µÇ´Â °ªÀÌ¶ó¸é Àç»ı¼º
-			i--;
+		date[i].name = i;
+		setDepartureTime(t);
+		for (int j = 0; j < 200; j++) {
+			date[i].time[0][j] = t[j] / 60;
+			date[i].time[1][j] = t[j] % 60;
 		}
 	}
 }
 
-void setNode(Node* table, int* t) {      // ·£´ı »ı¼ºÇÑ ½Ã°£À» ½Ã,ºĞ,ÃÊ·Î ³ª´©¾î ³ëµå¿¡ ÀúÀå
-	for (int i = 0; i < 31; i++) {
-		int time_value = t[i];
-		table[i].hour = time_value / 3600;
-		time_value %= 3600;
-		table[i].minute = time_value / 60;
-		table[i].second = time_value % 60;
-	}
-}
-
-void printTable(Node* table) {         // ½Ã°£Ç¥ Ãâ·Â
-	for (int j = 0; j < 5; j++) {
-		int i = j * 7;
-		for (int date = i; (date < i + 7) && (date<31); date++) {
-			if (table[date].hour < 10) {
-				printf("0");         // ÇÑ ÀÚ¸® ¼öÀÇ À§Ä¡¸¦ ¸ÂÃß±â À§ÇØ ¾Õ¿¡ 0 Æ÷ÇÔ½ÃÅ°±â
-			}
-			printf("%d h\t", table[date].hour);
+void printDate(Date* date) {			// ì‹œê°„í‘œ ì¶œë ¥
+	for(int i=0;i<31;i++) {
+		printf("day ");
+		if (date[i].name < 9) printf("0");
+		printf("%d\n",date[i].name+1);
+		for(int j=0;j<200;j++) {
+			if (date[i].time[0][j] < 10) printf("0");
+			printf("%d h ",date[i].time[0][j]);
+			if (date[i].time[1][j] < 10) printf("0");
+			printf("%d m\n", date[i].time[1][j]);
 		}
 		printf("\n");
-		for (int date = i; (date<i + 7) && (date<31); date++) {
-			if (table[date].minute < 10) {
-				printf("0");
-			}
-			printf("%d m\t", table[date].minute);
-		}
-		printf("\n");
-		for (int date = i; (date < i + 7) && (date<31); date++) {
-			if (table[date].second < 10) {
-				printf("0");
-			}
-			printf("%d s\t", table[date].second);
-		}
-		printf("\n\n");
 	}
 }
