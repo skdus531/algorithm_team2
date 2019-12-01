@@ -4,7 +4,6 @@
 #include <math.h>
 #include "RBtree.h"
 #include "path.h"
-#include "timetable.h"
 
 
 int main() {
@@ -40,10 +39,10 @@ int main() {
 
 	while (1) {
 		printMain();
-		c = getch();
+		c = _getch();
 		if ((c == 0x00) || (c == 0xE0)) {
-			printf("잘못된 입력입니다.\n");
-			c = getch();
+			printf("Wrong Input.\n");
+			c = _getch();
 		}
 		else {
 			switch (c) {
@@ -64,7 +63,7 @@ int main() {
 				exit(0);
 				break;
 			default:
-				printf("잘못된 입력입니다.\n");
+				printf("Wrong Input.\n");
 				break;
 			}
 		}
