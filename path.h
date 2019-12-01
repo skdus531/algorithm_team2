@@ -41,3 +41,5 @@ void printMain();
 void printArr(int dist[], int n, int s);
 
 void dijkstra(Graph* graph, int s, int date);
+
+int compare(int a[3]);
