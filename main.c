@@ -5,6 +5,9 @@
 #include "RBtree.h"
 #include "path.h"
 
+#define _CRT_SECURE_NO_WARNINGS
+
+static int rsvNum = 1;
 
 int main() {
 	srand((unsigned)time(NULL));
@@ -17,9 +20,13 @@ int main() {
 	Graph* graph = createGraph(edges, date); //나라 위치 설정 & path 연결
 	//printGraph(graph); // 출발지 별 path 출력
 	unsigned char c;
+	
+	NILL = (Node*)malloc(sizeof(Node));
+	NILL->color = 'B';
+	root = NILL;
 
 	//전체 경로의 출발시간 찾기
-  /*
+  
 	int i = 0;
 	for (i = 0; i < 26; i++) {
 		Dest * ptr = graph->head[i];
@@ -33,7 +40,7 @@ int main() {
 		}
 		printf("\n");
 	}
-*/
+
 
 
 
@@ -46,15 +53,31 @@ int main() {
 		}
 		else {
 			switch (c) {
-			case '1':
-				//printf("1\n");
+			case '1': {
+					//사용자에게 이름, s, d, date 입력 받아 insert 하기
+				//예약번호는 지금 static 변수 rsvNum++해서 쓰기
 				break;
-			case '2':
-				//printf("2\n");
-				break;
-			case '3':
-				//printf("3\n");
-				break;
+			}
+			case '2': {
+					int rsv_num = 0;
+					printf("Please enter your reservation number : ");
+					scanf("%d", &rsv_num);
+					RB_DELETE(rsv_num);
+					break;
+			}
+			case '3': {
+				int rsv_num = 0;
+				printf("Please enter your reservation number : ");
+				scanf("%d", &rsv_num);
+					
+				if (isExist(rsv_num)) {
+						Node* temp = (Node*)malloc(sizeof(Node));
+						temp = Search(rsv_num);
+						PRINT_RBT(root);
+					}
+				else printf("We can't find your reservation status. Please check your reservation again.");
+					break;
+			}
 			case '4':
 				//printf("4\n");
 				break;

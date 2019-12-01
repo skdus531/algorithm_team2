@@ -1,27 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
-typedef struct _node {
-	char color;
-	char* name;
-	int rsv_num;
-	int s, d, date;
-	struct _node *parent;
-	struct _node *leftChild;
-	struct _node *rightChild;
-}Node;
+#include "RBtree.h"
+#include "path.h"
 
 void RB_INSERT1(Node* z);
 void RB_DELETE1(Node* x);
 void Transplant(Node* u, Node* v);
+Node* minimum(Node* x);
 
-int printFlag = 0;
-Node* RBT_root;
+Node* root;
 Node* NILL;
 
 int isExist(int rsv_num) {
-	Node* temp = RBT_root;
+	Node* temp = root;
 	int diff;
 	while (temp != NILL) {
 		diff = rsv_num - temp->rsv_num;
@@ -43,7 +35,7 @@ void LR(Node* x) {
 	if (y->leftChild != NILL)  y->leftChild->parent = x;
 
 	y->parent = x->parent;
-	if (y->parent == NILL) RBT_root = y;
+	if (y->parent == NILL) root = y;
 	else if (x == x->parent->leftChild) x->parent->leftChild = y;
 	else x->parent->rightChild = y;
 
@@ -60,7 +52,7 @@ void RR(Node* x) {
 
 
 	y->parent = x->parent;
-	if (y->parent == NILL)  RBT_root = y;
+	if (y->parent == NILL)  root = y;
 	else if (x == x->parent->leftChild) x->parent->leftChild = y;
 	else  x->parent->rightChild = y;
 
@@ -68,7 +60,7 @@ void RR(Node* x) {
 	x->parent = y;
 }
 
-void RB_INSERT(int rsv_num,char* name, int s, int d, int date) {
+void RB_INSERT(int rsv_num, char* name, int s, int d, int date) {
 	Node* z, *x, *y;
 	z = (Node*)malloc(sizeof(Node));
 
@@ -81,27 +73,19 @@ void RB_INSERT(int rsv_num,char* name, int s, int d, int date) {
 	z->leftChild = NILL;
 	z->rightChild = NILL;
 
-	x = RBT_root;
+	x = root;
 	y = NILL;
 
-	if (isExist(rsv_num) == 1 && printFlag) {
-		printf("%d exists in the tree. Insertion ignored!", rsv_num);
-		return;
-	}
-	else if (isExist(rsv_num) == 0 && printFlag)
-		printf("insertion of %d succeed! \n", rsv_num);
-
+	printf("Your reservation has been successfully completed!  Your reservation number is : %d\n", z->rsv_num);
 	while (x != NILL) {
 		y = x;
 		if (z->rsv_num <= x->rsv_num) x = x->leftChild;
 		else x = x->rightChild;
-
 	}
 
-	if (y == NILL) RBT_root = z;
+	if (y == NILL) root = z;
 	else if (z->rsv_num <= y->rsv_num) y->leftChild = z;
 	else y->rightChild = z;
-
 
 	z->parent = y;
 
@@ -154,12 +138,12 @@ void RB_INSERT1(Node* z) {
 		}
 	}
 
-	RBT_root->color = 'B';
+	root->color = 'B';
 }
 
 void RB_DELETE(int rsv_num) {
 	Node* y, *x, *z;
-	z = RBT_root;
+	z = root;
 	while (z != NILL && rsv_num != z->rsv_num) {
 		if (z->rsv_num > rsv_num)
 			z = z->leftChild;
@@ -171,12 +155,8 @@ void RB_DELETE(int rsv_num) {
 	y = z;
 	yColor1 = y->color;
 
-	if (isExist(rsv_num) == 0 && printFlag) {
-		printf("%d is not in the tree. Deletion ignored.", rsv_num);
-		return;
-	}
-	else if (isExist(rsv_num) == 1 && printFlag)
-		printf("deletion of %d is succeed!\n", rsv_num);
+	if (isExist(rsv_num)) printf("Your reservation has been cancelled.\n");
+	else printf("We can't find your reservation. Please check your reservation number again.\n");
 
 	if (z->leftChild == NILL) {
 		x = z->rightChild;
@@ -212,7 +192,7 @@ void RB_DELETE(int rsv_num) {
 void RB_DELETE1(Node* x) {
 	Node* w;
 
-	while (x != RBT_root && x->color == 'B') {
+	while (x != root && x->color == 'B') {
 		if (x == x->parent->leftChild) {
 			w = x->parent->rightChild;
 
@@ -241,7 +221,7 @@ void RB_DELETE1(Node* x) {
 				x->parent->color = 'B';
 				w->rightChild->color = 'B';
 				LR(x->parent);
-				x = RBT_root;
+				x = root;
 			}
 
 		}
@@ -272,23 +252,23 @@ void RB_DELETE1(Node* x) {
 				x->parent->color = 'B';
 				w->leftChild->color = 'B';
 				RR(x->parent);
-				x = RBT_root;
+				x = root;
 			}
 		}
 	}
 	x->color = 'B';
 }
 
-void PRINT_RBT(Node* x) {
-	if (x != NILL) {
-		PRINT_RBT(x->leftChild);
-		printf("%s's reservation number is %d\n",x->name, x->rsv_num);
-		PRINT_RBT(x->rightChild);
-	}
+void PRINT_RBT(int rsv_num) {
+	Node* x = Search(rsv_num);
+	printf("%s's reservation number is %d\n", x->name, x->rsv_num);
+	printf("And your source city is %d\ndestination city is %d.\n", x->s, x->d);
+	printf("You are going to depart at date '%d' ", x->date);
+
 }
 
 void Transplant(Node* u, Node* v) {
-	if (u->parent == NILL) RBT_root = v;
+	if (u->parent == NILL) root = v;
 	else if (u == u->parent->leftChild) u->parent->leftChild = v;
 	else u->parent->rightChild = v;
 
@@ -298,14 +278,20 @@ void Transplant(Node* u, Node* v) {
 
 Node* Search(int rsv_num) {
 	Node* x;
-
-	x = RBT_root;
+	x = root;
 	while (x != NILL && x->rsv_num != rsv_num) {
 		if (rsv_num < x->rsv_num) x = x->leftChild;
 		else x = x->rightChild;
 	}
+
 	return x;
 }
 
+Node* minimum(Node* x) {
+	while (x->leftChild != NILL) {
+		x = x->leftChild;
+	}
+	return x;
+}
 
 
