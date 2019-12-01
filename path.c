@@ -3,7 +3,6 @@
 #include <math.h>
 #include <time.h>
 #include <limits.h>
-#include "timetable.h"
 #include "path.h"
 
 /*
@@ -172,12 +171,12 @@ void printGraph(Graph * graph) {
 }
 
 void printMain() {
-	printf("\n"); 
-	printf("1. 예약"); 
-	printf("2. 예약 취소");
-	printf("3. 예약 확인");
-	printf("4. 항공 시간표");
-	printf("5. 종료");
+	printf("[Main]\n"); 
+	printf("1. reservation\n"); 
+	printf("2. cancel reservation\n");
+	printf("3. check reservation\n");
+	printf("4. time table\n");
+	printf("5. exit\n");
 	printf("\n");
 	return;
 }
