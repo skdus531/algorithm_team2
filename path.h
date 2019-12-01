@@ -1,23 +1,36 @@
 typedef struct Graph {
-	struct Node* head[26];
-	int location[26][2]; // [][0]: xÁÂÇ¥, [][1]: yÁÂÇ¥ 
+	struct Dest* head[26];
+	int location[26][2]; // [][0]: xì¢Œí‘œ, [][1]: yì¢Œí‘œ 
 } Graph;
 
-typedef struct Node {
+
+typedef struct Dest {
 	int dest;// 0~26 (a~z)
-	int distance; //°Å¸®(km) (500À¸·Î ³ª´©¸é flightTime)
-	int departureTime[3]; //¸ÅÀÏ ·£´ı ¼³Á¤, [0]: ³¯Â¥, [1]: ½Ã, [2]: ºĞ
-	struct Node * next;
-} Node;
+	int distance; //ê±°ë¦¬(km) (500ìœ¼ë¡œ ë‚˜ëˆ„ë©´ flightTime)
+	int departureTime[32][3]; //ë§¤ì¼ ëœë¤ ì„¤ì •, [0]: ë‚ ì§œ, [1]: ì‹œ, [2]: ë¶„
+	int flightTime[2];
+	int arriveTime[32][3];
+	struct Dest * next;
+} Dest;
 
 typedef struct Edge {
-	int s, d; //Ãâ¹ßÁö, µµÂøÁö
+	int s, d; //ì¶œë°œì§€, ë„ì°©ì§€
 } Edge;
+typedef struct Date {			// ë‚ ì§œë³„ë¡œ ì´ë¦„, ì‹œê°„, ë¶„ì„ í¬í•¨
+	int name;
+	int time[2][200];			// time[0]ì´ ì‹œê°„, time[1]ì´ ë¶„
+	struct Date *next;
+} Date;
 
-Node* findNode(Graph* graph, int s, int d);
+void setDepartureTime(int* t);		// ì¶œë°œì‹œê° 31ê°œ ëœë¤ìƒì„±
+void setDate(Date* date, int* t);	// ëœë¤ ìƒì„±í•œ ì‹œê°„ì„ ì‹œ,ë¶„ìœ¼ë¡œ ë‚˜ëˆ„ì–´ ë…¸ë“œì— ì €ì¥
+void printDate(Date* date);
+
+Dest* findNode(Graph* graph, int s, int d);
 
 void locationSetting(Graph * graph);
-Graph* createGraph(Edge* edges);
+
+Graph* createGraph(Edge* edges, Date* date);
 
 void createEdge(Edge* edges);
 
@@ -27,4 +40,4 @@ void printMain();
 
 void printArr(int dist[], int n, int s);
 
-void dijkstra(Graph* graph, int s);
+void dijkstra(Graph* graph, int s, int date);
