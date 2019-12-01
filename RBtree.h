@@ -21,7 +21,7 @@ int isExist(int value);
 void LR(Node* x);
 void RR(Node* x);
 
-void RB_INSERT(char* name, int s, int d, int date);
+void RB_INSERT(int rsv_num, char* name, int s, int d, int date);
 void RB_INSERT1(Node* z);
 void RB_DELETE(int value);
 void RB_DELETE1(Node* x);
