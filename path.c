@@ -3,46 +3,25 @@
 #include <math.h>
 #include <time.h>
 #include <limits.h>
+#include "timetable.h"
+#include "path.h"
 
-typedef struct Graph {
-	struct Node* head[26];
-	int location[26][2]; // [][0]: xÁÂÇ¥, [][1]: yÁÂÇ¥ 
-} Graph;
-
-typedef struct Node {
-	int dest;// 0~26 (a~z)
-	int distance; //°Å¸®(km) (500À¸·Î ³ª´©¸é flightTime)
-	int departureTime[3]; //¸ÅÀÏ ·£´ı ¼³Á¤, [0]: ³¯Â¥, [1]: ½Ã, [2]: ºĞ
-	struct Node * next;
-} Node;
-
-typedef struct Edge {
-	int s,d; //Ãâ¹ßÁö, µµÂøÁö
-} Edge;
-
-void printGraph(Graph * graph);
-void createEdge(Edge* edges);
-void locationSetting(Graph * graph);
-Graph* createGraph(Edge* edges);
-void printMain();
-void dijkstra(struct Graph* graph, int src);
-
+/*
 int main() {
 	Edge edges[100] = {0};
-	createEdge(edges); //path 100°³ ·£´ı ¼³Á¤
-	Graph * graph = createGraph(edges); //³ª¶ó À§Ä¡ ¼³Á¤ & path ¿¬°á
-	printGraph(graph); // Ãâ¹ßÁö º° path Ãâ·Â
+	createEdge(edges); //path 100ê°œ ëœë¤ ì„¤ì •
+	Graph * graph = createGraph(edges); //ë‚˜ë¼ ìœ„ì¹˜ ì„¤ì • & path ì—°ê²°
+	printGraph(graph); // ì¶œë°œì§€ ë³„ path ì¶œë ¥
 	unsigned char c;
 	dijkstra(graph, 0);
 	dijkstra(graph, 1);
 	dijkstra(graph, 2);
 
-	/*
 	while (1) {
 		printMain();
 		c = getch();
 		if ((c == 0x00)||(c == 0xE0)) {
-			printf("Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.\n");
+			printf("ì˜ëª»ëœ ì…ë ¥ì…ë‹ˆë‹¤.\n");
 			c = getch();
 		}
 		else {
@@ -60,21 +39,21 @@ int main() {
 				//printf("4\n");
 				break;
 			case '5':
-				//printf("5 Á¾·á\n");
+				//printf("5 ì¢…ë£Œ\n");
 				exit(0);
 				break;
 			default:
-				printf("Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.\n");
+				printf("ì˜ëª»ëœ ì…ë ¥ì…ë‹ˆë‹¤.\n");
 				break;
 			}
 		}
-	}*/
+	}
 
 	return 0;
 }
-
-Node* findNode(Graph* graph, int s, int d) {
-	Node * ptr = graph->head[s];
+*/
+Dest* findNode(Graph* graph, int s, int d) {
+	Dest * ptr = graph->head[s];
 	while (ptr != NULL) {
 		if (ptr->dest == d) {
 			return ptr;
@@ -84,31 +63,59 @@ Node* findNode(Graph* graph, int s, int d) {
 	return NULL;
 }
 
-Graph* createGraph(Edge* edges) {//100°³ edges ¹Ş¾Æ¼­
+Graph* createGraph(Edge* edges, Date* date) {//100ê°œ edges ë°›ì•„ì„œ
 	Graph* graph = (Graph*)malloc(sizeof(Graph));
 	for(int i = 0; i < 26; i++){
 		graph->head[i] = NULL;
 	}
 
-	locationSetting(graph); //³ª¶ó À§Ä¡ ·£´ı ¼³Á¤
-
+	locationSetting(graph); //ë‚˜ë¼ ìœ„ì¹˜ ëœë¤ ì„¤ì •
+	int k = 0, l = 0;
 	for (int i = 0; i < 100; i++) {
 		int s = edges[i].s;
 		int d = edges[i].d;
 		int distance = (int)sqrt(pow(graph->location[s][0] - graph->location[d][0], 2) + pow(graph->location[s][1] - graph->location[d][1], 2));
-		
-		//path¸¶´Ù ¾ç¹æÇâÀ¸·Î Node 2°³¾¿ ¸¸µé±â
-		struct Node* newNode = (Node*)malloc(sizeof(Node));
+		int flight[2];
+		flight[0] = distance / 500;
+		flight[1] = (distance % 500) * 60/500 ;
+		//pathë§ˆë‹¤ ì–‘ë°©í–¥ìœ¼ë¡œ Node 2ê°œì”© ë§Œë“¤ê¸°
+		struct Dest* newNode = (Dest*)malloc(sizeof(Dest));
+		struct Dest* newNode1 = (Dest*)malloc(sizeof(Dest));
 		newNode->dest = d;
+		newNode1->dest = s;
 		newNode->distance = distance;
-		//departureTimeÀº ³ªÁß¿¡ ¸ÅÀÏ ·£´ı ¼³Á¤ÇÏ±â
+		newNode1->distance = distance;
+		newNode->flightTime[0] = flight[0];
+		newNode->flightTime[1] = flight[1];
+		newNode1->flightTime[0] = flight[0];
+		newNode1->flightTime[1] = flight[1];
+
+		for (int j = 1; j < 32; j++) {
+			newNode->departureTime[j][0] = j;
+			newNode->departureTime[j][1] = date[l].time[0][k];
+			newNode->departureTime[j][2] = date[l].time[1][k++];
+			newNode1->departureTime[j][0] = j;
+			newNode1->departureTime[j][1] = date[l].time[0][k];
+			newNode1->departureTime[j][2] = date[l].time[1][k++];
+			if (k == 200) {
+				l++; k = 0;
+			}
+		}
+
+		for (int j = 1; j < 32; j++) {
+			newNode->arriveTime[j][0] = j + (flight[0] / 24);
+			newNode->arriveTime[j][1] = newNode->departureTime[j][1] + (flight[0] % 24);
+			newNode->arriveTime[j][2] = newNode->departureTime[j][2] + flight[1];
+			newNode1->arriveTime[j][0] = j + (flight[0] / 24);
+			newNode1->arriveTime[j][1] = newNode1->departureTime[j][1] + (flight[0] % 24);
+			newNode1->arriveTime[j][2] = newNode1->departureTime[j][2] + flight[1];
+		}
+
+		//departureTimeì€ ë‚˜ì¤‘ì— ë§¤ì¼ ëœë¤ ì„¤ì •í•˜ê¸°
 		newNode->next = graph->head[s];
 		graph->head[s] = newNode;
 		
-		struct Node* newNode1 = (Node*)malloc(sizeof(Node));
-		newNode1->dest = s;
-		newNode1->distance = distance;
-		//departureTimeÀº ³ªÁß¿¡ ¸ÅÀÏ ·£´ı ¼³Á¤ÇÏ±â
+		//departureTimeì€ ë‚˜ì¤‘ì— ë§¤ì¼ ëœë¤ ì„¤ì •í•˜ê¸°
 		newNode1->next = graph->head[d];
 		graph->head[d] = newNode1;
 	}
@@ -118,7 +125,7 @@ Graph* createGraph(Edge* edges) {//100°³ edges ¹Ş¾Æ¼­
 void locationSetting(Graph * graph) {
 	srand((unsigned)time(NULL));
 	for (int i = 0; i < 26; i++) {
-		int x = rand() % 6001 - 3000; //³Ê¹« °¡±õÁö ¾Ê³ª? 50´ÜÀ§·Î ¼³Á¤? 
+		int x = rand() % 6001 - 3000; //ë„ˆë¬´ ê°€ê¹ì§€ ì•Šë‚˜? 50ë‹¨ìœ„ë¡œ ì„¤ì •? 
 		int y = rand() % 6001 - 3000;
 		graph->location[i][0] = x;
 		graph->location[i][1] = y;
@@ -154,7 +161,7 @@ void createEdge(Edge* edges) {
 void printGraph(Graph * graph) {
 	int i = 0;
 	for (i = 0; i < 26; i++) {
-		Node * ptr = graph->head[i];
+		Dest * ptr = graph->head[i];
 		printf("[%c]", i + 'a');
 		while (ptr != NULL) {
 			printf("-> %c(%dkm) ", ptr->dest+'a',ptr->distance);
@@ -166,11 +173,11 @@ void printGraph(Graph * graph) {
 
 void printMain() {
 	printf("\n"); 
-	printf("1. ¿¹¾à"); 
-	printf("2. ¿¹¾à Ãë¼Ò");
-	printf("3. ¿¹¾à È®ÀÎ");
-	printf("4. Ç×°ø ½Ã°£Ç¥");
-	printf("5. Á¾·á");
+	printf("1. ì˜ˆì•½"); 
+	printf("2. ì˜ˆì•½ ì·¨ì†Œ");
+	printf("3. ì˜ˆì•½ í™•ì¸");
+	printf("4. í•­ê³µ ì‹œê°„í‘œ");
+	printf("5. ì¢…ë£Œ");
 	printf("\n");
 	return;
 }
@@ -182,11 +189,11 @@ void printArr(int dist[], int n, int s){
 			printf("%c \t %d\n", i + 'a', dist[i]);
 	}
 }
-
+/*
 void dijkstra(Graph* graph, int s){	
 	int path[26];
-	int dist[26]; // ºñÇà °Å¸®
-	int check[26]; // ¹æ¹®Çß´ÂÁö Ã¼Å©
+	int dist[26]; // ë¹„í–‰ ê±°ë¦¬
+	int check[26]; // ë°©ë¬¸í–ˆëŠ”ì§€ ì²´í¬
 	
 	
 	for (int i = 0; i < 26; i++) {
@@ -208,7 +215,7 @@ void dijkstra(Graph* graph, int s){
 		int u = index;
 
 		for (int v = 0; v < 26; v++) {
-			Node* ptr = findNode(graph, u, v);
+			Dest* ptr = findNode(graph, u, v);
 				if (ptr != NULL) {
 					if (check[v] == 0 && dist[u] != INT_MAX && dist[v] > dist[u] + ptr->distance){
 						dist[v] = dist[u] + ptr->distance;
@@ -226,7 +233,7 @@ void dijkstra(Graph* graph, int s){
 
 	int k;
 	printf("\n");
-	Node* ptr = NULL;
+	Dest* ptr = NULL;
 	for (int i = 0; i < 26; i++) {
 		printf("[%c]: ", i + 'a');
 		if (path[i] == -1) {
@@ -250,4 +257,98 @@ void dijkstra(Graph* graph, int s){
 	printf("\n");
 
 	printArr(dist, 26,s);
+}
+*/
+
+void dijkstra(Graph* graph, int s, int date) {
+	int path[26];
+	int dist[26]; // ë¹„í–‰ ê±°ë¦¬
+	int check[26]; // ë°©ë¬¸í–ˆëŠ”ì§€ ì²´í¬
+	//int depTime[26][31][2];
+	//int arrTime[26][31][2];
+	int arrT[26][2]; // [0]ëŠ” ë‚ ì§œ, [1]ì€ ì»´í˜ì–´í•¨ìˆ˜ ë¦¬í„´ê°’?
+
+	//arrTime, depTime ì„¤ì •í•˜ê¸°
+
+
+	for (int i = 0; i < 26; i++) {
+		//dist[i] = INT_MAX;
+		arrT[i][1] = INT_MAX;/*
+		Dest* ptr = findNode(graph, s, i);
+		if (ptr != NULL) {
+			arrT[i][0] = ptr->arriveTime[date][0];
+			arrT[i][1] = compare(ptr->arriveTime[date]);
+		}*/
+		check[i] = 0;
+		path[i] = -1;
+	}
+//	dist[s] = 0;
+	arrT[s][0] = date;
+	arrT[s][1] = 0;
+	path[s] = -2;
+
+	for (int i = 0; i < 25; i++) {
+		int min = INT_MAX, index;
+		for (int i = 0; i < 26; i++) {
+			if (check[i] == 0 && min > arrT[i][1]){//dist[i]) {
+				index = i;
+				min = arrT[i][1];// dist[i];
+			}
+		}
+		int u = index;
+
+		for (int v = 0; v < 26; v++) {
+			Dest* ptr = findNode(graph, u, v);
+			if (ptr != NULL) { //(ë‚ ì§œë³´ë‹¤ ë’¤ì—ì—¬ì•¼ í•¨!) vê°€ ë°©ë¬¸í•œì  ì—†ê³  src->uê¹Œì§€ì˜ ê¸¸ì´ ìˆìœ¼ë©°, src->uì˜ ë„ì°©ì‹œê°„ì´ u->vì˜ ì¶œë°œì‹œê°„ë³´ë‹¤ ë¹¨ë¼ì•¼í•˜ê³ , src->vì˜ ë„ì°©ì‹œê°„ë³´ë‹¤ src->u -> vê¹Œì§€ì˜ ë„ì°©ì‹œê°„ì´ ì‘ìœ¼ë©´ ì—…ë°ì´íŠ¸
+				
+				//ë§Œì•½ ë‚ ì§œê°€ ë” ë¹ ë¥´ë‹¤ë©´, ë‹¤ìŒë‚ êº¼ë¥¼ íƒ€ëŠ” ë°©ë²•ë„ ìƒê°..
+				if (arrT[u][0] > date && check[v] == 0 && arrT[u][1] != INT_MAX && arrT[u][1] < compare(ptr->departureTime[arrT[u][0]]) && compare(ptr->arriveTime[arrT[u][0]]) < arrT[v][1]) {//dist[v] > dist[u] + ptr->distance) {
+		//			if (check[v] == 0 && dist[u] != INT_MAX && compare(src->uì˜ arriveTime[ë‚ ì§œ]) < compare(ptr->departureTime[ë‚ ì§œ]) && compare(ptr->arriveTime[ë‚ ì§œ]) < compare(í˜„ì¬ ì €ì¥ëœ src->vë„ì°©ì‹œê°„)) {//dist[v] > dist[u] + ptr->distance) {
+					//dist[v] = dist[u] + ptr->distance;
+					arrT[v][1] = compare(ptr->arriveTime[arrT[u][0]]);
+					arrT[v][0] = ptr->arriveTime[arrT[u][0]][0];
+
+					if (u == s) {
+						path[v] = -2;
+					}
+					else {
+						path[v] = u;
+					}
+				}
+			}
+		}
+		check[u] = 1;
+	}
+
+	int k;
+	printf("\n");
+	Dest* ptr = NULL;
+	for (int i = 0; i < 26; i++) {
+		printf("[%c]: ", i + 'a');
+		if (path[i] == -1) {
+			dist[i] = -1;
+		}
+		else {
+			k = i;
+			while (path[k] != -2) {
+				ptr = findNode(graph, path[k], k);
+				printf("<- %c(%d) ", path[k] + 'a', ptr->distance);
+				k = path[k];
+			}
+			ptr = findNode(graph, s, k);
+			if (ptr != NULL) {
+				printf("<- %c(%d)", s + 'a', ptr->distance);
+			}
+		}
+		printf("\n");
+
+	}
+	printf("\n");
+
+	printArr(dist, 26, s);
+
+}
+
+int compare(int a[3]) {
+	return a[0] * 100 + a[1] * 100 + a[2];
 }
