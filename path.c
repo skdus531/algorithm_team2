@@ -268,7 +268,6 @@ void dijkstra1(Graph* graph, int s){
 	//printArr(dist, 26,s);
 }
 
-
 void dijkstra(Graph* graph, int s, int date) {
 	int path[26][2];
 	int dist[26]; // 비행 거리
@@ -276,23 +275,12 @@ void dijkstra(Graph* graph, int s, int date) {
 	int arrT[26][2]; // [0]는 날짜, [1]은 컴페어함수 리턴값?
 
 	for (int i = 0; i < 26; i++) {
-		Dest* ptr = findNode(graph, s, i);
-		if (ptr != NULL) {
-			arrT[i][0] = ptr->arriveTime[date][0];
-			arrT[i][1] = compare(ptr->arriveTime[date]);
-			check[i] = 0;
-			path[i][0] = s;
-			path[i][1] = date;
-		}
-		else {
 			arrT[i][0] = date;
 			arrT[i][1] = INT_MAX;
 			check[i] = 0;
 			path[i][0] = -1;
 			path[i][1] = 0;
-		}
 	}
-//	dist[s] = 0;
 	arrT[s][0] = date;
 	arrT[s][1] = 0;
 	path[s][0] = s;
@@ -312,44 +300,24 @@ void dijkstra(Graph* graph, int s, int date) {
 		for (int v = 0; v < 26; v++) {
 			Dest* ptr = findNode(graph, u, v);
 			if (ptr != NULL) { //(날짜보다 뒤에여야 함!) v가 방문한적 없고 src->u까지의 길이 있으며, src->u의 도착시간이 u->v의 출발시간보다 빨라야하고, src->v의 도착시간보다 src->u -> v까지의 도착시간이 작으면 업데이트
+				if (check[v] == 0 && arrT[u][1] != INT_MAX) {
+					int a = 0;
 
-				if (u == s) {
-			/*		path[v][0] = s;
-					path[v][1] = date;
-					arrT[v][1] = compare(ptr->arriveTime[date]);
-					arrT[v][0] = ptr->arriveTime[date][0];
-					*/
-				}
-				else {
-					if (check[v] == 0 && arrT[u][1] != INT_MAX) {//dist[v] > dist[u] + ptr->distance) {
-						int a = 0;
+					while (arrT[u][0] + a < 32 && arrT[u][1] >= compare(ptr->departureTime[arrT[u][0] + a])) {
+						a++;
+					}
 
-						while (arrT[u][0] + a < 32 && arrT[u][1] >= compare(ptr->departureTime[arrT[u][0] + a])) {
-							a++;
+					if (arrT[u][0] + a < 32 && compare(ptr->arriveTime[arrT[u][0] + a]) < arrT[v][1]) {
+						arrT[v][1] = compare(ptr->arriveTime[arrT[u][0] + a]);
+						arrT[v][0] = ptr->arriveTime[arrT[u][0] + a][0];
+							
+						if (u == s) {
+								path[v][0] = s;
+								path[v][1] = date;
 						}
-
-
-						//			if (arrT[u][1] >= compare(ptr->departureTime[arrT[u][0] + a]) && arrT[u][0] + a < 32) {
-							//			a++;
-
-						if (arrT[u][0] + a < 32 && compare(ptr->arriveTime[arrT[u][0] + a]) < arrT[v][1]) {
-							//if (arrT[u][0] + a < 32 && compare(ptr->arriveTime[arrT[u][0] + a]) < arrT[v][1]) {
-								//if (check[v] == 0 && dist[u] != INT_MAX && compare(src->u의 arriveTime[날짜]) < compare(ptr->departureTime[날짜]) && compare(ptr->arriveTime[날짜]) < compare(현재 저장된 src->v도착시간)) {//dist[v] > dist[u] + ptr->distance) {
-								//dist[v] = dist[u] + ptr->distance;
-							arrT[v][1] = compare(ptr->arriveTime[arrT[u][0] + a]);
-							arrT[v][0] = ptr->arriveTime[arrT[u][0] + a][0];
-
-							if (u == s) {
-									path[v][0] = s;
-									path[v][1] = date;
-							//		arrT[v][1] = compare(ptr->arriveTime[date]);
-							//		arrT[v][0] = ptr->arriveTime[date][0];
-
-							}
-							else {
-								path[v][0] = u;
-								path[v][1] = arrT[u][0] + a;
-							}
+						else {
+							path[v][0] = u;
+							path[v][1] = arrT[u][0] + a;
 						}
 					}
 				}
@@ -375,10 +343,7 @@ void dijkstra(Graph* graph, int s, int date) {
 			}
 			ptr = findNode(graph, s, k);
 			if (ptr != NULL) {
-		//		printf("<- %c(%d)", s + 'a', ptr->distance);
-			//	printf("<- %c(%d %dh %dm ~ %d %dh %dm) ", s + 'a', arrT[k][0], ptr->departureTime[arrT[k][0]][1], ptr->departureTime[arrT[k][0]][2], ptr->arriveTime[arrT[k][0]][0], ptr->arriveTime[arrT[k][0]][1], ptr->arriveTime[arrT[k][0]][2]);
 				printf("<- %c(%d %dh %dm ~ %d %dh %dm) ", s + 'a', path[k][1], ptr->departureTime[path[k][1]][1], ptr->departureTime[path[k][1]][2], ptr->arriveTime[path[k][1]][0], ptr->arriveTime[path[k][1]][1], ptr->arriveTime[path[k][1]][2]);
-
 			}
 		}
 		printf("\n");
@@ -391,5 +356,5 @@ void dijkstra(Graph* graph, int s, int date) {
 }
 
 int compare(int a[3]) {
-	return a[0] * 100 + a[1] * 100 + a[2];
+	return a[0] * 10000 + a[1] * 100 + a[2];
 }
