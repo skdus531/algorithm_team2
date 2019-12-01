@@ -12,7 +12,7 @@ typedef struct Date {			// 날짜별로 이름, 시간, 분을 포함
 void setDepartureTime(int* t);
 void setDate(Date* date, int* t);
 void printDate(Date* date);
-*/
+
 int main() {
 	srand((unsigned)time(NULL));
 	Date date[31];			// 31개의 날짜
@@ -22,7 +22,7 @@ int main() {
 
 	return 0;
 }
-
+*/
 void setDepartureTime(int* t) {			// 출발시각 31개 랜덤생성
 	for (int i = 0; i < 200; i++) {
 		t[i] = rand() % 1440;			// 0h 0m 0s ~ 23h 59m 랜덤생성
