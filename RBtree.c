@@ -156,7 +156,10 @@ void RB_DELETE(int rsv_num) {
 	yColor1 = y->color;
 
 	if (isExist(rsv_num)) printf("Your reservation has been cancelled.\n");
-	else printf("We can't find your reservation. Please check your reservation number again.\n");
+	else {
+		printf("We can't find your reservation. Please check your reservation number again.\n");
+		return;
+	}
 
 	if (z->leftChild == NILL) {
 		x = z->rightChild;
