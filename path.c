@@ -276,7 +276,6 @@ void dijkstra(Graph* graph, int s, int d, int date,int shortestPath[10][2]) {
 	}
 	printf("\n");
 */
-	return shortestPath;
 }
 
 int compare(int a[3]) {
