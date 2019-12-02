@@ -61,7 +61,7 @@ void RR(Node* x) {
 	x->parent = y;
 }
 
-void RB_INSERT(int rsv_num, char* name, int s, int d, int date) {
+void RB_INSERT(int rsv_num, char* name, int s, int d, int date, int seatLv) {
 	Node* z, *x, *y;
 	z = (Node*)malloc(sizeof(Node));
 
@@ -70,6 +70,7 @@ void RB_INSERT(int rsv_num, char* name, int s, int d, int date) {
 	z->s = s;
 	z->d = d;
 	z->date = date;
+	z->seatLv = seatLv;
 	z->color = 'R';
 	z->leftChild = NILL;
 	z->rightChild = NILL;
@@ -77,7 +78,7 @@ void RB_INSERT(int rsv_num, char* name, int s, int d, int date) {
 	x = root;
 	y = NILL;
 
-	printf("Your reservation has been successfully completed!\n");
+	printf("\n[System] : Your reservation has been successfully completed!\n");
 	nodeNum++;
 	
 	while (x != NILL) {
@@ -159,11 +160,11 @@ void RB_DELETE(int rsv_num) {
 	yColor1 = y->color;
 
 	if (isExist(rsv_num)) {
-		printf("Your reservation has been cancelled.\n");
+		printf("\n[System]: Your reservation has been cancelled.\n");
 		nodeNum--;
 	}
 	else {
-		printf("We can't find your reservation. Please check your reservation number again.\n");
+		printf("\n[System]: We can't find your reservation. Please check your reservation number again.\n");
 		return;
 	}
 
@@ -270,10 +271,15 @@ void RB_DELETE1(Node* x) {
 
 void PRINT_RBT(int rsv_num) {
 	Node* x = Search(rsv_num);
-	printf("%s's reservation number is %d\n", x->name, x->rsv_num);
-	printf("And your source city is %d\nDestination city is %d.\n", x->s, x->d);
-	printf("You are going to depart at date '%d' \n", x->date);
-
+	char* seatLv;
+	printf("\n----Reservation Information----\n");
+	printf("- Reserver's name: %s\n- Reservation number: %d\n", x->name, x->rsv_num);
+	printf("- Departure city: %c\n- Destination city : %c\n", x->s, x->d);
+	printf("- Date of departure: 2019/12/%d\n", x->date);
+	if (x->seatLv == 1) seatLv = "First class";
+	else if (x->seatLv == 2) seatLv = "Business class";
+	else seatLv = "Economy class";
+	printf("- Level of seat : %s\n", seatLv);
 }
 
 void Transplant(Node* u, Node* v) {
@@ -303,4 +309,22 @@ Node* minimum(Node* x) {
 	return x;
 }
 
+int RBTHeight(Node* x) {
+	if (x == NILL)
+		return 0;
+	else {
+		int left_side;
+		int right_side;
+		left_side = RBTHeight(x->leftChild);
+		right_side = RBTHeight(x->rightChild);
+		if (left_side > right_side)
+			return left_side + 1;
+		else
+			return right_side + 1;
+	}
+}
 
+void printNode() {
+	int height = RBTHeight(root);
+	printf("Number of nodes : %d\nHeight of the tree: %d\n", nodeNum,height);
+}

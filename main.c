@@ -7,7 +7,18 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-static int rsvNum = 1;
+int calRsvNum(char s, char d, int date) {
+	srand(time(NULL));
+	s -= 'a'; d -= 'a';
+	int ran = (rand() % 100000 )+100000 + date * 10000 + s* 100 + d;
+	return ran;
+}
+
+void calRate(int *seatLv) {
+	if (*seatLv == 1) *seatLv += 9;
+	else if (*seatLv == 2) *seatLv += 3;
+	else if (*seatLv == 3) *seatLv -= 2;
+}
 
 int main() {
 	srand((unsigned)time(NULL));
@@ -21,6 +32,7 @@ int main() {
 	//printGraph(graph); // 출발지 별 path 출력
 	unsigned char c;
 	
+	int rsv[600] = { 0, };
 	NILL = (Node*)malloc(sizeof(Node));
 	NILL->color = 'B';
 	root = NILL;
@@ -49,7 +61,6 @@ int main() {
 	dijkstra(graph, 0, 6, 20, path); //검색 a->g 20일 출발
 	int flight = printPath(graph, path, 0); //비행시간(분 단위) 리턴
 	printf("Flight time: %dh %dm\n", flight / 60, flight % 60);
-	
 	int level = 1; //좌석 레벨 (1: economy, 5: business, 10: prestige)
 	long price = flight * 1200 * level;
 	printf("Price: %dwon\n", price);
@@ -65,34 +76,63 @@ int main() {
 		else {
 			switch (c) {
 			case '1': {
-					//사용자에게 이름, s, d, date 입력 받아 insert 하기
-				//예약번호는 지금 static 변수 rsvNum++해서 쓰기
-				int s = 3, d = 5,date = 3,rsv_num = rsvNum++, level = 5;
-				RB_INSERT(rsv_num, "hello", s, d, date);
+				char name[10] = { '\0' };
+				int date, seatLv, rsv_num = 0;
+				char s, d;
+				printf("Please enter your name: ");  //이름 입력받기
+				fgets(name, 10, stdin);
+				name[strlen(name) - 1] = '\0';
+
+				printf("Please enter the departure city(a~z): "); //source city 입력받기
+				scanf("%c", &s); getchar();
+
+				printf("Please enter the destination city(a~z): "); //destination 입력받기
+				scanf("%c", &d); getchar();
+
+				printf("Please enter the date of departure(0~30): "); //date 입력받기
+				scanf("%d", &date); getchar();
+
+				printf("Please enter the level of your seat(1~3)\n[1 is First class 2 is Business class 3 is Economy class] :  ");
+				scanf("%d", &seatLv); getchar();  // seat level 입력 받기
+
+				rsv_num = calRsvNum(s,d, date); 
+				
+				RB_INSERT(rsv_num, name, s, d, date, seatLv);
 				PRINT_RBT(rsv_num);
-				dijkstra(graph, s, d, date, path); //검색 a->g 20일 출발
+				dijkstra(graph, s-'a', d-'a', date, path);
 				flight = printPath(graph, path, 0);
-				printf("Flight time: %dh %dm\n", flight / 60, flight % 60);
-				price = flight * 1200 * level;
-				printf("Price: %dwon\n", price);
+				printf("- Flight time: %dh %dm\n", flight / 60, flight % 60);
+				calRate(&seatLv);
+				price = flight * 1200 * seatLv;
+				printf("- Ticket price: %d won\n", price);
+
+				printNode();
 				break;
 			}
 			case '2': {
 					int rsv_num = 0;
 					printf("Please enter your reservation number : ");
-					scanf("%d", &rsv_num);
+					scanf("%d", &rsv_num); getchar();
 					RB_DELETE(rsv_num);
+					printNode();
 					break;
 			}
 			case '3': {
 				int rsv_num = 0;
 				printf("Please enter your reservation number : ");
-				scanf("%d", &rsv_num);
+				scanf("%d", &rsv_num); getchar();
 					
 				if (isExist(rsv_num)) {
 						PRINT_RBT(rsv_num);
+						Node* temp = Search(rsv_num);
+						dijkstra(graph, temp->s - 'a',temp->d - 'a', temp->date, path);
+						flight = printPath(graph, path, 0);
+						printf("- Flight time: %dh %dm\n", flight / 60, flight % 60);
+						calRate(&(temp->seatLv));
+						price = flight * 1200 * (temp->seatLv);
+						printf("- Ticket price: %d won\n", price);
 					}
-				else printf("We can't find your reservation status. Please check your reservation again.");
+				else printf("\n [System] : We can't find your reservation status. Please check your reservation again.");
 					break;
 			}
 			case '4':
