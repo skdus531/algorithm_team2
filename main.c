@@ -41,7 +41,14 @@ int main() {
 		printf("\n");
 	}
 
-
+	//shortestPath  >  dijkstra(graph, src, dest, date, path)로 검색
+	int path[10];
+	int * path1 = dijkstra(graph, 0, 6, 20, path);
+	i = 0;
+	while(path1[i] != -1){
+		printf("%c <- ", path1[i++]+'a');
+	}
+	printf("\n");
 
 
 	while (1) {
