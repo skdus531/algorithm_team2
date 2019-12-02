@@ -41,3 +41,6 @@ void printMain();
 void dijkstra(Graph* graph, int s, int d, int date, int shortestPath[10][2]);
 
 int compare(int a[3]);
+
+
+void printPath(Graph* graph, int path[10][2], int i);
