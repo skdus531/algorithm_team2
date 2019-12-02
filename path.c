@@ -283,19 +283,21 @@ int compare(int a[3]) {
 	return a[0] * 10000 + a[1] * 100 + a[2];
 }
 
-void printPath(Graph* graph, int path[10][2], int i) {
+int printPath(Graph* graph, int path[10][2], int i) {
 	int s, d, ti;
 	Dest* ptr;
 
 	if (path[i + 1][0] == -1){
-		return;
+		return 0;
 	}
 	else {
-		printPath(graph, path, i + 1);
+		int f = printPath(graph, path, i + 1);
+
 		s = path[i + 1][0];  //path[i+1][0] = 출발지
 		d = path[i][0];      //path[i][0] = 도착지
 		ti = path[i + 1][1]; //path[i][1] = path[i+1][0]에서의 출발 날짜
 		ptr = findNode(graph, path[i + 1][0], path[i][0]);
 		printf("%c -> %c (%d %dh %dm ~ %d %dh %dm)\n",  s + 'a', d + 'a', ptr->departureTime[ti][0], ptr->departureTime[ti][1], ptr->departureTime[ti][2], ptr->arriveTime[ti][0], ptr->arriveTime[ti][1], ptr->arriveTime[ti][2]);
+		return f + ptr->flightTime[0] * 60 + ptr->flightTime[1];
 	}
 }
