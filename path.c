@@ -268,7 +268,8 @@ void dijkstra1(Graph* graph, int s){
 	//printArr(dist, 26,s);
 }
 
-void dijkstra(Graph* graph, int s, int date) {
+
+int* dijkstra(Graph* graph, int s, int d, int date,int * shortestPath) {
 	int path[26][2];
 	int dist[26]; // 비행 거리
 	int check[26]; // 방문했는지 체크
@@ -325,10 +326,37 @@ void dijkstra(Graph* graph, int s, int date) {
 		}
 		check[u] = 1;
 	}
+	
 
+	int t;
+	int i = 0;
+	Dest* ptr1 = NULL;
+
+	//printf("[%c]: ", d + 'a');
+	shortestPath[i++] = d;
+	if (path[d][0] == -1) {
+		shortestPath = NULL;
+	}
+	else {
+		t = d;
+		while (path[t][0] != s) {
+			ptr1 = findNode(graph, path[t][0], t);
+			shortestPath[i++] = path[t][0];
+	//		printf("<- %c(%d %dh %dm ~ %d %dh %dm) ", path[k][0] + 'a', path[k][1], ptr->departureTime[path[k][1]][1], ptr->departureTime[path[k][1]][2], ptr->arriveTime[path[k][1]][0], ptr->arriveTime[path[k][1]][1], ptr->arriveTime[path[k][1]][2]);
+			t = path[t][0];
+		}
+		ptr1 = findNode(graph, s, t);
+		if (ptr1 != NULL) {
+	//		printf("<- %c(%d %dh %dm ~ %d %dh %dm) ", s + 'a', path[k][1], ptr->departureTime[path[k][1]][1], ptr->departureTime[path[k][1]][2], ptr->arriveTime[path[k][1]][0], ptr->arriveTime[path[k][1]][1], ptr->arriveTime[path[k][1]][2]);
+			shortestPath[i++] = s;
+		}
+	}
+	shortestPath[i] = -1;
+	
 	int k;
 	printf("\n");
 	Dest* ptr = NULL;
+	
 	for (int i = 0; i < 26; i++) {
 		printf("[%c]: ", i + 'a');
 		if (path[i][0] == -1) {
@@ -351,6 +379,7 @@ void dijkstra(Graph* graph, int s, int date) {
 	}
 	printf("\n");
 
+	return shortestPath;
 //	printArr(dist, 26, s);
 
 }
