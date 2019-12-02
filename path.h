@@ -40,7 +40,7 @@ void printMain();
 
 void printArr(int dist[], int n, int s);
 
-void dijkstra(Graph* graph, int s, int date);
+int* dijkstra(Graph* graph, int s, int d, int date, int* shortestPath);
 void dijkstra1(Graph* graph, int s);
 
 int compare(int a[3]);
