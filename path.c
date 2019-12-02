@@ -132,22 +132,22 @@ void printGraph(Graph * graph) {
 
 void printDate(Graph* graph) {
 	for (int i = 0; i < 31; i++) {
-		printf("day");
+		printf("<day ");
 		if (i < 10) printf("0");
-		printf("%d\n", i);
+		printf("%d>\n", i);
 		for (int j = 0; j < 26; j++) {
 			Dest* ptr = graph->head[j];
 			printf("[%c] : \n", j + 'a');
 			while (ptr != NULL) {
 				if (ptr->departureTime[i][0]<10) printf("0");
-				printf("%d day", ptr->departureTime[i][0]<10);
+				printf("%d day", ptr->departureTime[i][0]);
 				if (ptr->departureTime[i][1]<10) printf("0");
-				printf("%d h", ptr->departureTime[i][1]<10);
+				printf("%d h", ptr->departureTime[i][1]);
 				if (ptr->departureTime[i][2]<10) printf("0");
-				printf("%d s", ptr->departureTime[i][2]<10);
+				printf("%d s", ptr->departureTime[i][2]);
 				ptr = ptr->next;
+				printf("\n");
 			}
-			printf("\n");
 		}
 		printf("\n");
 	}
