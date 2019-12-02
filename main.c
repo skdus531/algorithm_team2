@@ -80,7 +80,7 @@ int main() {
 				if (isExist(rsv_num)) {
 						Node* temp = (Node*)malloc(sizeof(Node));
 						temp = Search(rsv_num);
-						PRINT_RBT(root);
+						PRINT_RBT(temp);
 					}
 				else printf("We can't find your reservation status. Please check your reservation again.");
 					break;
