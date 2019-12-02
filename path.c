@@ -5,52 +5,7 @@
 #include <limits.h>
 #include "path.h"
 
-/*
-int main() {
-	Edge edges[100] = {0};
-	createEdge(edges); //path 100개 랜덤 설정
-	Graph * graph = createGraph(edges); //나라 위치 설정 & path 연결
-	printGraph(graph); // 출발지 별 path 출력
-	unsigned char c;
-	dijkstra(graph, 0);
-	dijkstra(graph, 1);
-	dijkstra(graph, 2);
 
-	while (1) {
-		printMain();
-		c = getch();
-		if ((c == 0x00)||(c == 0xE0)) {
-			printf("잘못된 입력입니다.\n");
-			c = getch();
-		}
-		else {
-			switch (c) {
-			case '1':
-				//printf("1\n");
-				break;
-			case '2':
-				//printf("2\n");
-				break;
-			case '3':
-				//printf("3\n");
-				break;
-			case '4':
-				//printf("4\n");
-				break;
-			case '5':
-				//printf("5 종료\n");
-				exit(0);
-				break;
-			default:
-				printf("잘못된 입력입니다.\n");
-				break;
-			}
-		}
-	}
-
-	return 0;
-}
-*/
 Dest* findNode(Graph* graph, int s, int d) {
 	Dest * ptr = graph->head[s];
 	while (ptr != NULL) {
@@ -90,8 +45,6 @@ Graph* createGraph(Edge* edges, Date* date) {//100개 edges 받아서
 		newNode->flightTime[1] = flight[1];
 		newNode1->flightTime[0] = flight[0];
 		newNode1->flightTime[1] = flight[1];
-	//	newNode->flightTime = flight;
-	//	newNode1->flightTime = flight;
 
 		for (int j = 1; j < 32; j++) {
 			newNode->departureTime[j][0] = j;
@@ -104,7 +57,7 @@ Graph* createGraph(Edge* edges, Date* date) {//100개 edges 받아서
 				l++; k = 0;
 			}
 		}
-		//flight = a시간 b분 = (a)/24 일 + (a)%24 시간 + b분 
+
 		int m, h;
 		for (int j = 1; j < 32; j++) {
 			m = newNode->departureTime[j][2] + flight[1];
@@ -120,11 +73,8 @@ Graph* createGraph(Edge* edges, Date* date) {//100개 edges 받아서
 			newNode1->arriveTime[j][0] = j + h / 24;
 		}
 
-		//departureTime은 나중에 매일 랜덤 설정하기
 		newNode->next = graph->head[s];
 		graph->head[s] = newNode;
-		
-		//departureTime은 나중에 매일 랜덤 설정하기
 		newNode1->next = graph->head[d];
 		graph->head[d] = newNode1;
 	}
@@ -134,7 +84,7 @@ Graph* createGraph(Edge* edges, Date* date) {//100개 edges 받아서
 void locationSetting(Graph * graph) {
 	srand((unsigned)time(NULL));
 	for (int i = 0; i < 26; i++) {
-		int x = rand() % 6001 - 3000; //너무 가깝지 않나? 50단위로 설정? 
+		int x = rand() % 6001 - 3000; 
 		int y = rand() % 6001 - 3000;
 		graph->location[i][0] = x;
 		graph->location[i][1] = y;
@@ -191,87 +141,9 @@ void printMain() {
 	return;
 }
 
-void printArr(int dist[], int n, int s){
-	printf("Src: %c\n", s + 'a');
-	printf("Dest  Flight distance\n");
-	for (int i = 0; i < n; i++){
-			printf("%c \t %d\n", i + 'a', dist[i]);
-	}
-}
 
-void dijkstra1(Graph* graph, int s){	
-	int path[26];
-	int dist[26]; // 비행 거리
-	int check[26]; // 방문했는지 체크
-	
-	
-	for (int i = 0; i < 26; i++) {
-		dist[i] = INT_MAX;
-		check[i] = 0;
-		path[i] = -1;
-	}
-	dist[s] = 0;
-	path[s] = -2;
-
-	for (int i = 0; i < 25; i++){
-		int min = INT_MAX, index;
-		for (int i = 0; i < 26; i++) {
-			if (check[i] == 0 && min > dist[i]) {
-				index = i;
-				min = dist[i];
-			}
-		}
-		int u = index;
-
-		for (int v = 0; v < 26; v++) {
-			Dest* ptr = findNode(graph, u, v);
-				if (ptr != NULL) {
-					if (check[v] == 0 && dist[u] != INT_MAX && dist[v] > dist[u] + ptr->distance){
-						dist[v] = dist[u] + ptr->distance;
-						if (u == s) {
-							path[v] = -2;
-						}
-						else {
-							path[v] = u;
-						}
-					}
-				}
-			}
-		check[u] = 1;
-	}
-
-	int k;
-	printf("\n");
-	Dest* ptr = NULL;
-	for (int i = 0; i < 26; i++) {
-		printf("[%c]: ", i + 'a');
-		if (path[i] == -1) {
-			dist[i] = -1;
-		}
-		else{
-			k = i;
-			while (path[k] != -2) {
-				ptr = findNode(graph, path[k], k);
-				printf("<- %c(%d) ", path[k] + 'a', ptr->distance);
-				k = path[k];
-			}
-			ptr = findNode(graph, s, k);
-			if (ptr != NULL) {
-				printf("<- %c(%d)", s + 'a', ptr->distance);
-			}
-		}
-	printf("\n");
-
-	}
-	printf("\n");
-
-	//printArr(dist, 26,s);
-}
-
-
-int* dijkstra(Graph* graph, int s, int d, int date,int * shortestPath) {
+void dijkstra(Graph* graph, int s, int d, int date,int shortestPath[10][2]) {
 	int path[26][2];
-	int dist[26]; // 비행 거리
 	int check[26]; // 방문했는지 체크
 	int arrT[26][2]; // [0]는 날짜, [1]은 컴페어함수 리턴값?
 
@@ -331,9 +203,10 @@ int* dijkstra(Graph* graph, int s, int d, int date,int * shortestPath) {
 	int t;
 	int i = 0;
 	Dest* ptr1 = NULL;
-
-	//printf("[%c]: ", d + 'a');
-	shortestPath[i++] = d;
+	
+	shortestPath[i][0] = d;
+	shortestPath[i++][1] = 0;
+	
 	if (path[d][0] == -1) {
 		shortestPath = NULL;
 	}
@@ -341,18 +214,19 @@ int* dijkstra(Graph* graph, int s, int d, int date,int * shortestPath) {
 		t = d;
 		while (path[t][0] != s) {
 			ptr1 = findNode(graph, path[t][0], t);
-			shortestPath[i++] = path[t][0];
-	//		printf("<- %c(%d %dh %dm ~ %d %dh %dm) ", path[k][0] + 'a', path[k][1], ptr->departureTime[path[k][1]][1], ptr->departureTime[path[k][1]][2], ptr->arriveTime[path[k][1]][0], ptr->arriveTime[path[k][1]][1], ptr->arriveTime[path[k][1]][2]);
+			shortestPath[i][0] = path[t][0]; 
+			shortestPath[i++][1] = path[t][1];
 			t = path[t][0];
 		}
 		ptr1 = findNode(graph, s, t);
 		if (ptr1 != NULL) {
-	//		printf("<- %c(%d %dh %dm ~ %d %dh %dm) ", s + 'a', path[k][1], ptr->departureTime[path[k][1]][1], ptr->departureTime[path[k][1]][2], ptr->arriveTime[path[k][1]][0], ptr->arriveTime[path[k][1]][1], ptr->arriveTime[path[k][1]][2]);
-			shortestPath[i++] = s;
+			shortestPath[i][0] = s;
+			shortestPath[i++][1] = date;
 		}
 	}
-	shortestPath[i] = -1;
-	
+	shortestPath[i][0] = -1;
+
+/*	
 	int k;
 	printf("\n");
 	Dest* ptr = NULL;
@@ -378,10 +252,8 @@ int* dijkstra(Graph* graph, int s, int d, int date,int * shortestPath) {
 
 	}
 	printf("\n");
-
+*/
 	return shortestPath;
-//	printArr(dist, 26, s);
-
 }
 
 int compare(int a[3]) {
