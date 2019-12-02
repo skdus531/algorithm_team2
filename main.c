@@ -47,8 +47,8 @@ int main() {
 	int path[10][2]; //경로 넘겨줄 배열
 	
 	dijkstra(graph, 0, 6, 20, path); //검색 a->g 20일 출발
-	printPath(graph, path, 0); //경로 출력
-	printf("\n");	
+	int flight = printPath(graph, path, 0); //비행시간(분 단위) 리턴
+	printf("Flight time: %dh %dm\n", flight / 60, flight % 60);
 
 	while (1) {
 		printMain();
@@ -62,6 +62,11 @@ int main() {
 			case '1': {
 					//사용자에게 이름, s, d, date 입력 받아 insert 하기
 				//예약번호는 지금 static 변수 rsvNum++해서 쓰기
+				int s = 3, d = 5,date = 3,rsv_num = rsvNum++;
+				RB_INSERT(rsv_num, "hello", s, d, date);
+				PRINT_RBT(rsv_num);
+				dijkstra(graph, s, d, date, path); //검색 a->g 20일 출발
+				printPath(graph, path, 0);
 				break;
 			}
 			case '2': {
