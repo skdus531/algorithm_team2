@@ -77,7 +77,7 @@ void RB_INSERT(int rsv_num, char* name, int s, int d, int date) {
 	x = root;
 	y = NILL;
 
-	printf("Your reservation has been successfully completed!  Your reservation number is : %d\n", z->rsv_num);
+	printf("Your reservation has been successfully completed!\n");
 	nodeNum++;
 	
 	while (x != NILL) {
@@ -271,8 +271,8 @@ void RB_DELETE1(Node* x) {
 void PRINT_RBT(int rsv_num) {
 	Node* x = Search(rsv_num);
 	printf("%s's reservation number is %d\n", x->name, x->rsv_num);
-	printf("And your source city is %d\ndestination city is %d.\n", x->s, x->d);
-	printf("You are going to depart at date '%d' ", x->date);
+	printf("And your source city is %d\nDestination city is %d.\n", x->s, x->d);
+	printf("You are going to depart at date '%d' \n", x->date);
 
 }
 
