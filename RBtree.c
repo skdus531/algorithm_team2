@@ -11,6 +11,7 @@ Node* minimum(Node* x);
 
 Node* root;
 Node* NILL;
+static int nodeNum;
 
 int isExist(int rsv_num) {
 	Node* temp = root;
@@ -77,6 +78,8 @@ void RB_INSERT(int rsv_num, char* name, int s, int d, int date) {
 	y = NILL;
 
 	printf("Your reservation has been successfully completed!  Your reservation number is : %d\n", z->rsv_num);
+	nodeNum++;
+	
 	while (x != NILL) {
 		y = x;
 		if (z->rsv_num <= x->rsv_num) x = x->leftChild;
@@ -155,7 +158,10 @@ void RB_DELETE(int rsv_num) {
 	y = z;
 	yColor1 = y->color;
 
-	if (isExist(rsv_num)) printf("Your reservation has been cancelled.\n");
+	if (isExist(rsv_num)) {
+		printf("Your reservation has been cancelled.\n");
+		nodeNum--;
+	}
 	else {
 		printf("We can't find your reservation. Please check your reservation number again.\n");
 		return;
