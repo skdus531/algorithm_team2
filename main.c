@@ -26,7 +26,7 @@ int main() {
 	root = NILL;
 
 	//전체 경로의 출발시간 찾기
-  
+  /*
 	int i = 0;
 	for (i = 0; i < 26; i++) {
 		Dest * ptr = graph->head[i];
@@ -40,16 +40,27 @@ int main() {
 		}
 		printf("\n");
 	}
-
+*/
+	
+	
 	//shortestPath  >  dijkstra(graph, src, dest, date, path)로 검색
-	int path[10];
-	int * path1 = dijkstra(graph, 0, 6, 20, path);
-	i = 0;
-	while(path1[i] != -1){
-		printf("%c <- ", path1[i++]+'a');
+	int i = 0;
+	int s, d, ti;
+	int path[10][2]; //경로 넘겨줄 배열
+	Dest* ptr;
+	
+	dijkstra(graph, 0, 6, 20, path); //검색 a->g 20일 출발
+	
+	while(path[i+1][0] != -1){ 
+		s = path[i + 1][0];  //path[i+1][0] = 출발지
+		d = path[i][0];      //path[i][0] = 도착지
+		ti = path[i + 1][1]; //path[i][1] = path[i+1][0]에서의 출발 날짜
+		ptr = findNode(graph, path[i + 1][0], path[i][0]); 
+		printf("%c <- %c (%d %dh %dm ~ %d %dh %dm)\n", d+'a', s+'a',ptr->departureTime[ti][0], ptr->departureTime[ti][1], ptr->departureTime[ti][2], ptr->arriveTime[ti][0], ptr->arriveTime[ti][1], ptr->arriveTime[ti][2]);
+		i++;
 	}
 	printf("\n");
-
+	
 
 	while (1) {
 		printMain();
