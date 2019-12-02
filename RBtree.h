@@ -13,6 +13,7 @@ typedef struct _node {
 }Node;
 
 
+static int nodeNum;
 Node* root;
 Node* NILL;
 
