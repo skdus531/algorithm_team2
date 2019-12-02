@@ -298,7 +298,7 @@ int printPath(Graph* graph, int path[10][2], int i) {
 		ti = path[i + 1][1]; //path[i][1] = path[i+1][0]에서의 출발 날짜
 		ptr = findNode(graph, path[i + 1][0], path[i][0]);
 
-		printf("- Flight path(Arrival time): %c -> %c ( [Day%d] [Time %d : %d] ~ [Day: %d] [Time: %d : %d])\n",  s + 'a', d + 'a', ptr->departureTime[ti][0], ptr->departureTime[ti][1], ptr->departureTime[ti][2], ptr->arriveTime[ti][0], ptr->arriveTime[ti][1], ptr->arriveTime[ti][2]);
+		printf("- Flight path(Arrival time): %c -> %c ( [Day%d] [Time %d : %d] ~ [Day%d] [Time %d : %d])\n",  s + 'a', d + 'a', ptr->departureTime[ti][0], ptr->departureTime[ti][1], ptr->departureTime[ti][2], ptr->arriveTime[ti][0], ptr->arriveTime[ti][1], ptr->arriveTime[ti][2]);
 		return f + ptr->flightTime[0] * 60 + ptr->flightTime[1];
 	}
 }
