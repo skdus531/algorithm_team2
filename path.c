@@ -131,7 +131,7 @@ void printGraph(Graph * graph) {
 }
 
 void printDate(Graph* graph) {
-	for (int i = 0; i < 31; i++) {
+	for (int i = 1; i < 32; i++) {
 		printf("<day ");
 		if (i < 10) printf("0");
 		printf("%d>\n", i);
@@ -140,14 +140,15 @@ void printDate(Graph* graph) {
 			printf("[%c] : \n", j + 'a');
 			while (ptr != NULL) {
 				if (ptr->departureTime[i][0]<10) printf("0");
-				printf("%d day", ptr->departureTime[i][0]);
+				printf("%d day\t", ptr->departureTime[i][0]);
 				if (ptr->departureTime[i][1]<10) printf("0");
-				printf("%d h", ptr->departureTime[i][1]);
+				printf("%d h\t", ptr->departureTime[i][1]);
 				if (ptr->departureTime[i][2]<10) printf("0");
 				printf("%d s", ptr->departureTime[i][2]);
 				ptr = ptr->next;
 				printf("\n");
 			}
+			printf("\n");
 		}
 		printf("\n");
 	}
