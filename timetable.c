@@ -39,7 +39,7 @@ void setDate(Date* date, int* t) {		// 랜덤 생성한 시간을 시,분으로 
 		}
 	}
 }
-
+/*
 void printDate(Date* date) {			// 시간표 출력
 	for(int i=0;i<31;i++) {
 		printf("day ");
@@ -54,3 +54,4 @@ void printDate(Date* date) {			// 시간표 출력
 		printf("\n");
 	}
 }
+*/
