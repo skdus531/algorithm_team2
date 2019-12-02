@@ -49,7 +49,11 @@ int main() {
 	dijkstra(graph, 0, 6, 20, path); //검색 a->g 20일 출발
 	int flight = printPath(graph, path, 0); //비행시간(분 단위) 리턴
 	printf("Flight time: %dh %dm\n", flight / 60, flight % 60);
-	int price;
+	
+	int level = 1; //좌석 레벨 (1: economy, 5: business, 10: prestige)
+	long price = flight * 1200 * level;
+	printf("Price: %dwon\n", price);
+	printf("\n");
 	
 	while (1) {
 		printMain();
@@ -63,14 +67,14 @@ int main() {
 			case '1': {
 					//사용자에게 이름, s, d, date 입력 받아 insert 하기
 				//예약번호는 지금 static 변수 rsvNum++해서 쓰기
-				int s = 3, d = 5,date = 3,rsv_num = rsvNum++;
+				int s = 3, d = 5,date = 3,rsv_num = rsvNum++, level = 5;
 				RB_INSERT(rsv_num, "hello", s, d, date);
 				PRINT_RBT(rsv_num);
 				dijkstra(graph, s, d, date, path); //검색 a->g 20일 출발
 				flight = printPath(graph, path, 0);
 				printf("Flight time: %dh %dm\n", flight / 60, flight % 60);
-				price = flight;
-				printf("\n");
+				price = flight * 1200 * level;
+				printf("Price: %dwon\n", price);
 				break;
 			}
 			case '2': {
