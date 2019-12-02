@@ -89,7 +89,7 @@ int main() {
 				printf("Please enter the destination city(a~z): "); //destination 입력받기
 				scanf("%c", &d); getchar();
 
-				printf("Please enter the date of departure(0~30): "); //date 입력받기
+				printf("Please enter the date of departure(1~31): "); //date 입력받기
 				scanf("%d", &date); getchar();
 
 				printf("Please enter the level of your seat(1~3)\n[1 is First class 2 is Business class 3 is Economy class] :  ");
