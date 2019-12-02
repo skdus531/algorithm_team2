@@ -63,14 +63,14 @@ Graph* createGraph(Edge* edges, Date* date) {//100개 edges 받아서
 			m = newNode->departureTime[j][2] + flight[1];
 			newNode->arriveTime[j][2] = m % 60;
 			h = newNode->departureTime[j][1] + flight[0];
-			newNode->arriveTime[j][1] = h % 24 + m / 60;
-			newNode->arriveTime[j][0] = j + h / 24;
+			newNode->arriveTime[j][1] = (h + m / 60) % 24;
+			newNode->arriveTime[j][0] = j + (h + m / 60)/24;
 
 			m = newNode1->departureTime[j][2] + flight[1];
 			newNode1->arriveTime[j][2] = m % 60;
 			h = newNode1->departureTime[j][1] + flight[0];
-			newNode1->arriveTime[j][1] = h % 24 + m / 60;
-			newNode1->arriveTime[j][0] = j + h / 24;
+			newNode1->arriveTime[j][1] = (h + m / 60) % 24;
+			newNode1->arriveTime[j][0] = j + (h + m / 60) / 24;
 		}
 
 		newNode->next = graph->head[s];
