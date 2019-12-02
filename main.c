@@ -89,9 +89,7 @@ int main() {
 				scanf("%d", &rsv_num);
 					
 				if (isExist(rsv_num)) {
-						Node* temp = (Node*)malloc(sizeof(Node));
-						temp = Search(rsv_num);
-						PRINT_RBT(temp);
+						PRINT_RBT(rsv_num);
 					}
 				else printf("We can't find your reservation status. Please check your reservation again.");
 					break;
