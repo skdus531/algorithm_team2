@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <windows.h>
 #include <time.h>
 #include <math.h>
 #include "RBtree.h"
@@ -8,7 +9,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 int calRsvNum(char s, char d, int date) {
-	srand(time(NULL));
+	srand(GetTickCount());
 	s -= 'a'; d -= 'a';
 	int ran = (rand() % 100000 )+100000 + date * 10000 + s* 100 + d;
 	return ran;
@@ -20,8 +21,34 @@ void calRate(int *seatLv) {
 	else if (*seatLv == 3) *seatLv -= 2;
 }
 
+void reservation() {
+	char name[10] = { '\0' };
+	int date[500], seatLv[500], rsv_num = 0;
+	char s[500], d[500];
+	int c[500], i = 0; //값하나씩 생성해서 바로 넣으려고 했더니 가끔 똑같은 값들이 연속적으로 나와서 배열에 저장
+	srand(GetTickCount());
+	for (int k = 0; k < 500; k++) {
+		c[k] = rand() % 9 + 1;
+		s[k] = rand() % 26 + 'a';
+		d[k] = rand() % 26 + 'a';
+		date[k] = rand() % 31 + 1;
+		seatLv[k] = rand() % 3;
+	}
+	srand(GetTickCount());
+	for (int k = 0; k < 500; k++) {
+		i = 0;
+		while (i < c[k]) {
+			name[i++] = rand() % 26 + 'a';
+		}
+		name[i] = '\0';
+		rsv_num = calRsvNum(s[k], d[k], date[k]);
+		//중복확인 해야함
+		RB_INSERT(rsv_num, name, s[k], d[k], date[k], seatLv[k]);
+	}
+	return;
+}
+
 int main() {
-	srand((unsigned)time(NULL));
 	Date date[31];			// 31개의 날짜
 	int t[200];				// 매일 200개의 출발시각
 	setDate(date, t);
@@ -54,10 +81,14 @@ int main() {
 	}
 */
 	
+	reservation(); //500개 예약
 	
 	//shortestPath  >  dijkstra(graph, src, dest, date, path)로 검색
 	int path[10][2]; //경로 넘겨줄 배열
-	
+	int flight;
+	int level;
+	long price;
+/*	
 	dijkstra(graph, 0, 6, 20, path); //검색 a->g 20일 출발
 	int flight = printPath(graph, path, 0); //비행시간(분 단위) 리턴
 	printf("Flight time: %dh %dm\n", flight / 60, flight % 60);
@@ -65,7 +96,7 @@ int main() {
 	long price = flight * 1200 * level;
 	printf("Price: %dwon\n", price);
 	printf("\n");
-	
+*/	
 	while (1) {
 		printMain();
 		c = _getch();
@@ -96,7 +127,10 @@ int main() {
 				scanf("%d", &seatLv); getchar();  // seat level 입력 받기
 
 				rsv_num = calRsvNum(s,d, date); 
-				
+				int height = RBTHeight(root);
+				int nodes = getNodeNum();
+			
+				//중복 확인하기
 				RB_INSERT(rsv_num, name, s, d, date, seatLv);
 				PRINT_RBT(rsv_num);
 				dijkstra(graph, s-'a', d-'a', date, path);
@@ -106,15 +140,17 @@ int main() {
 				price = flight * 1200 * seatLv;
 				printf("- Ticket price: %d won\n", price);
 
-				printNode();
+				printNode(height, nodes);
 				break;
 			}
 			case '2': {
 					int rsv_num = 0;
 					printf("Please enter your reservation number : ");
 					scanf("%d", &rsv_num); getchar();
+					int height = RBTHeight(root);
+					int nodes = getNodeNum();
 					RB_DELETE(rsv_num);
-					printNode();
+					printNode(height,nodes);
 					break;
 			}
 			case '3': {
@@ -136,7 +172,7 @@ int main() {
 					break;
 			}
 			case '4':
-				//printf("4\n");
+				printDate(graph);
 				break;
 			case '5':
 				//printf("5 종료\n");
