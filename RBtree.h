@@ -15,8 +15,9 @@ static int nodeNum;
 Node* root;
 Node* NILL;
 
+int getNodeNum();
 int isExist(int value);
-void printNode();
+void printNode(int prevHeight, int prevNodes);
 int RBTHeight(Node* x);
 
 void LR(Node* x);
