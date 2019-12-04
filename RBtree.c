@@ -13,6 +13,10 @@ Node* root;
 Node* NILL;
 static int nodeNum;
 
+int getNodeNum() {
+	return nodeNum;
+}
+
 int isExist(int rsv_num) {
 	Node* temp = root;
 	int diff;
@@ -324,7 +328,9 @@ int RBTHeight(Node* x) {
 	}
 }
 
-void printNode() {
+void printNode(int prevHeight, int prevNodes) {
 	int height = RBTHeight(root);
-	printf("Number of nodes : %d\nHeight of the tree: %d\n", nodeNum,height);
-}
+	printf("========================================================\n");
+	printf("Before>\n- Number of nodes : %d\n- Height of the tree: %d\n", prevNodes, prevHeight);
+	printf("After>\n- Number of nodes : %d\n- Height of the tree: %d\n", nodeNum, height);
+} 
