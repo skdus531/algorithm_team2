@@ -70,7 +70,7 @@ int main() {
 	root = NILL;
 
 	printf(" ********************************************** \n");
-	printf("          Airplane Rervation Service           \n");
+	printf("          Airplane Reservation Service           \n");
 	printf("                  - Team 2 -                   \n");
 	printf(" ********************************************** \n");
 	
