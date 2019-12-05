@@ -21,18 +21,23 @@ void calRate(int *seatLv) {
 	else if (*seatLv == 3) *seatLv -= 2;
 }
 
-void reservation() {
+void reservation(Graph* graph) {
 	char name[10] = { '\0' };
 	int date[500], seatLv[500], rsv_num = 0;
 	char s[500], d[500];
 	int c[500], i = 0; //값하나씩 생성해서 바로 넣으려고 했더니 가끔 똑같은 값들이 연속적으로 나와서 배열에 저장
+	int path[10][2];
 	srand(GetTickCount());
 	for (int k = 0; k < 500; k++) {
 		c[k] = rand() % 9 + 1;
-		s[k] = rand() % 26 + 'a';
-		d[k] = rand() % 26 + 'a';
 		date[k] = rand() % 31 + 1;
 		seatLv[k] = rand() % 3;
+		date[k] = rand() % 31 + 1;
+		do {
+			s[k] = rand() % 26 + 'a';
+			d[k] = rand() % 26 + 'a';
+			dijkstra(graph, s[k] - 'a', d[k] - 'a', date[k], path);
+		} while (d[k] == s[k] || path[1][0] == -1); //출발지랑 도착지 같거나 경로 없는 경우
 	}
 	srand(GetTickCount());
 	for (int k = 0; k < 500; k++) {
@@ -64,66 +69,50 @@ int main() {
 	NILL->color = 'B';
 	root = NILL;
 
-	//전체 경로의 출발시간 찾기
-  /*
-	int i = 0;
-	for (i = 0; i < 26; i++) {
-		Dest * ptr = graph->head[i];
-		while (ptr != NULL) {
-			printf("[%c] -> %c(%dkm) \n", i + 'a', ptr->dest + 'a', ptr->distance);
-			for (int j = 1; j < 32; j++) {
-				printf(" %d %dh %dm ", ptr->departureTime[j][0], ptr->departureTime[j][1], ptr->departureTime[j][2]);
-			}
-			printf("\n\n");
-			ptr = ptr->next;
-		}
-		printf("\n");
-	}
-*/
+	printf(" ********************************************** \n");
+	printf("          Airplane Rervation Service           \n");
+	printf("                  - Team 2 -                   \n");
+	printf(" ********************************************** \n");
 	
-	reservation(); //500개 예약
+	
+	reservation(graph); //500개 예약
 	
 	//shortestPath  >  dijkstra(graph, src, dest, date, path)로 검색
 	int path[10][2]; //경로 넘겨줄 배열
 	int flight;
 	int level;
 	long price;
-/*	
-	dijkstra(graph, 0, 6, 20, path); //검색 a->g 20일 출발
-	int flight = printPath(graph, path, 0); //비행시간(분 단위) 리턴
-	printf("Flight time: %dh %dm\n", flight / 60, flight % 60);
-	int level = 1; //좌석 레벨 (1: economy, 5: business, 10: prestige)
-	long price = flight * 1200 * level;
-	printf("Price: %dwon\n", price);
-	printf("\n");
-*/	
+
 	while (1) {
 		printMain();
 		c = _getch();
 		if ((c == 0x00) || (c == 0xE0)) {
-			printf("Wrong Input.\n");
+			printf(" [System] : Wrong Input.\n");
 			c = _getch();
 		}
 		else {
 			switch (c) {
 			case '1': {
+				printf(" [Reservation]\n");
+				printf("===============================================\n");
+				
 				char name[10] = { '\0' };
 				int date, seatLv, rsv_num = 0;
 				char s, d;
-				printf("Please enter your name: ");  //이름 입력받기
+				printf(" Please enter your name: ");  //이름 입력받기
 				fgets(name, 10, stdin);
 				name[strlen(name) - 1] = '\0';
 
-				printf("Please enter the departure city(a~z): "); //source city 입력받기
+				printf(" Please enter the departure city (a~z): "); //source city 입력받기
 				scanf("%c", &s); getchar();
 
-				printf("Please enter the destination city(a~z): "); //destination 입력받기
+				printf(" Please enter the destination city (a~z): "); //destination 입력받기
 				scanf("%c", &d); getchar();
 
-				printf("Please enter the date of departure(1~31): "); //date 입력받기
+				printf(" Please enter the date of departure (1~31): "); //date 입력받기
 				scanf("%d", &date); getchar();
 
-				printf("Please enter the level of your seat(1~3)\n[1 is First class 2 is Business class 3 is Economy class] :  ");
+				printf(" Please enter the level of your seat(1~3)\n [1: First class  2: Business class  3: Economy class] :  ");
 				scanf("%d", &seatLv); getchar();  // seat level 입력 받기
 
 				rsv_num = calRsvNum(s,d, date); 
@@ -131,9 +120,15 @@ int main() {
 				int nodes = getNodeNum();
 			
 				//중복 확인하기
+				dijkstra(graph, s - 'a', d - 'a', date, path);
+				if (path[1][0] == -1) { //경로 없거나 출발지=도착지
+					printf("\n [System] : Sorry, NO path for %c to %c.\n", s, d);
+					break;
+				}
+				printf("\n [System] : Your reservation has been successfully completed!\n");
 				RB_INSERT(rsv_num, name, s, d, date, seatLv);
 				PRINT_RBT(rsv_num);
-				dijkstra(graph, s-'a', d-'a', date, path);
+				
 				flight = printPath(graph, path, 0);
 				printf("- Flight time: %dh %dm\n", flight / 60, flight % 60);
 				calRate(&seatLv);
@@ -144,8 +139,11 @@ int main() {
 				break;
 			}
 			case '2': {
+				printf(" [Cancel Reservation]\n");
+				printf("===============================================\n");
+				
 					int rsv_num = 0;
-					printf("Please enter your reservation number : ");
+					printf(" Please enter your reservation number : ");
 					scanf("%d", &rsv_num); getchar();
 					int height = RBTHeight(root);
 					int nodes = getNodeNum();
@@ -154,20 +152,23 @@ int main() {
 					break;
 			}
 			case '3': {
+				printf(" [Check Reservation]\n");
+				printf("===============================================\n");
+			
 				int rsv_num = 0;
 				printf("Please enter your reservation number : ");
 				scanf("%d", &rsv_num); getchar();
 					
 				if (isExist(rsv_num)) {
-						PRINT_RBT(rsv_num);
-						Node* temp = Search(rsv_num);
-						dijkstra(graph, temp->s - 'a',temp->d - 'a', temp->date, path);
-						flight = printPath(graph, path, 0);
-						printf("- Flight time: %dh %dm\n", flight / 60, flight % 60);
-						calRate(&(temp->seatLv));
-						price = flight * 1200 * (temp->seatLv);
-						printf("- Ticket price: %d won\n", price);
-					}
+					PRINT_RBT(rsv_num);
+					Node* temp = Search(rsv_num);
+					dijkstra(graph, temp->s - 'a',temp->d - 'a', temp->date, path);
+					flight = printPath(graph, path, 0);
+					printf("- Flight time: %dh %dm\n", flight / 60, flight % 60);
+					calRate(&(temp->seatLv));
+					price = flight * 1200 * (temp->seatLv);
+					printf("- Ticket price: %d won\n", price);
+				}
 				else printf("\n [System] : We can't find your reservation status. Please check your reservation again.");
 					break;
 			}
@@ -175,11 +176,11 @@ int main() {
 				printDate(graph);
 				break;
 			case '5':
-				//printf("5 종료\n");
+				printf(" [System] : Thank you for using our service.\n\n");
 				exit(0);
 				break;
 			default:
-				printf("Wrong Input.\n");
+				printf(" [System] : Wrong Input.\n");
 				break;
 			}
 		}
