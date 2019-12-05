@@ -155,6 +155,13 @@ void printDate(Graph* graph) {
 }
 
 void printMain() {
+	printf("\n [Main Menu]\n");
+	printf("===============================================\n");
+	printf("  1. Reservation        2. Reservation Cancel  \n\n");
+	printf("  3. Check Reservation  4. Time Table          \n\n");
+	printf("  5. Exit                                      \n\n");
+	return;
+	/* 원래 메뉴
 	printf("\n[Main]\n"); 
 	printf("1. reservation\n"); 
 	printf("2. cancel reservation\n");
@@ -163,6 +170,7 @@ void printMain() {
 	printf("5. exit\n");
 	printf("\n");
 	return;
+	*/
 }
 
 
@@ -231,10 +239,7 @@ void dijkstra(Graph* graph, int s, int d, int date,int shortestPath[10][2]) {
 	shortestPath[i][0] = d;
 	shortestPath[i++][1] = 0;
 	
-	if (path[d][0] == -1) {
-		shortestPath = NULL;
-	}
-	else {
+	if (path[d][0] != -1) {
 		t = d;
 		while (path[t][0] != s) {
 			ptr1 = findNode(graph, path[t][0], t);
@@ -249,34 +254,6 @@ void dijkstra(Graph* graph, int s, int d, int date,int shortestPath[10][2]) {
 		}
 	}
 	shortestPath[i][0] = -1;
-
-/*	
-	int k;
-	printf("\n");
-	Dest* ptr = NULL;
-	
-	for (int i = 0; i < 26; i++) {
-		printf("[%c]: ", i + 'a');
-		if (path[i][0] == -1) {
-			//dist[i] = -1;
-		}
-		else {
-			k = i;
-			while (path[k][0] != s) {
-				ptr = findNode(graph, path[k][0], k);
-				printf("<- %c(%d %dh %dm ~ %d %dh %dm) ", path[k][0] + 'a', path[k][1], ptr->departureTime[path[k][1]][1], ptr->departureTime[path[k][1]][2], ptr->arriveTime[path[k][1]][0], ptr->arriveTime[path[k][1]][1], ptr->arriveTime[path[k][1]][2]);
-				k = path[k][0];
-			}
-			ptr = findNode(graph, s, k);
-			if (ptr != NULL) {
-				printf("<- %c(%d %dh %dm ~ %d %dh %dm) ", s + 'a', path[k][1], ptr->departureTime[path[k][1]][1], ptr->departureTime[path[k][1]][2], ptr->arriveTime[path[k][1]][0], ptr->arriveTime[path[k][1]][1], ptr->arriveTime[path[k][1]][2]);
-			}
-		}
-		printf("\n");
-
-	}
-	printf("\n");
-*/
 }
 
 int compare(int a[3]) {
