@@ -157,7 +157,7 @@ void printDate(Graph* graph) {
 void printMain() {
 	printf("\n [Main Menu]\n");
 	printf("===============================================\n");
-	printf("  1. Reservation        2. Reservation Cancel  \n\n");
+	printf("  1. Reservation        2. Cancel Reservation  \n\n");
 	printf("  3. Check Reservation  4. Time Table          \n\n");
 	printf("  5. Exit                                      \n\n");
 	return;
