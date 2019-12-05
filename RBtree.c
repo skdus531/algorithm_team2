@@ -82,7 +82,6 @@ void RB_INSERT(int rsv_num, char* name, int s, int d, int date, int seatLv) {
 	x = root;
 	y = NILL;
 
-	printf("\n[System] : Your reservation has been successfully completed!\n");
 	nodeNum++;
 	
 	while (x != NILL) {
@@ -164,11 +163,11 @@ void RB_DELETE(int rsv_num) {
 	yColor1 = y->color;
 
 	if (isExist(rsv_num)) {
-		printf("\n[System]: Your reservation has been cancelled.\n");
+		printf("\n [System]: Your reservation has been cancelled.\n");
 		nodeNum--;
 	}
 	else {
-		printf("\n[System]: We can't find your reservation. Please check your reservation number again.\n");
+		printf("\n [System]: We can't find your reservation. Please check your reservation number again.\n");
 		return;
 	}
 
@@ -276,7 +275,7 @@ void RB_DELETE1(Node* x) {
 void PRINT_RBT(int rsv_num) {
 	Node* x = Search(rsv_num);
 	char* seatLv;
-	printf("\n----Reservation Information----\n");
+	printf("\n------------Reservation Information------------\n");
 	printf("- Reserver's name: %s\n- Reservation number: %d\n", x->name, x->rsv_num);
 	printf("- Departure city: %c\n- Destination city : %c\n", x->s, x->d);
 	printf("- Date of departure: 2019/12/%d\n", x->date);
@@ -330,7 +329,7 @@ int RBTHeight(Node* x) {
 
 void printNode(int prevHeight, int prevNodes) {
 	int height = RBTHeight(root);
-	printf("========================================================\n");
-	printf("Before>\n- Number of nodes : %d\n- Height of the tree: %d\n", prevNodes, prevHeight);
-	printf("After>\n- Number of nodes : %d\n- Height of the tree: %d\n", nodeNum, height);
+	printf("-----------------------------------------------\n");
+	printf(" Before>\n- Number of nodes : %d\n- Height of the tree: %d\n\n", prevNodes, prevHeight);
+	printf(" After>\n- Number of nodes : %d\n- Height of the tree: %d\n\n", nodeNum, height);
 } 
