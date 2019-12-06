@@ -116,27 +116,22 @@ void createEdge(Edge* edges) { //100개의 출발지->도착지 경로 설정
 }
 
 void printDate(Graph* graph) {
-	for (int i = 1; i < 32; i++) {
-		printf("<day ");
-		if (i < 10) printf("0");
-		printf("%d>\n", i);
-		for (int j = 0; j < 26; j++) {
-			Dest* ptr = graph->head[j];
-			printf("[%c] : \n", j + 'a');
-			while (ptr != NULL) {
-				if (ptr->departureTime[i][0]<10) printf("0");
-				printf("%d day\t", ptr->departureTime[i][0]);
-				if (ptr->departureTime[i][1]<10) printf("0");
-				printf("%d h\t", ptr->departureTime[i][1]);
-				if (ptr->departureTime[i][2]<10) printf("0");
-				printf("%d s", ptr->departureTime[i][2]);
-				ptr = ptr->next;
-				printf("\n");
-			}
-			printf("\n");
-		}
+	int date;		// 출발날짜
+	char src;		// 출발지
+	printf("Insert your depature date and source city : ");		// 31 e 처럼 날짜 출발지 입력
+	scanf("%d %c", &date, &src);
+	printf("\nDESTINATION\tTIME\n");
+	Dest* ptr = graph->head[(int)(src - 'a')];		// 출발지에 대응되는 첫번째 목적지
+	while (ptr != NULL) {
+		printf("%c\t\t", (char)(ptr->dest+'a'));		// 목적지 이름 출력
+		if (ptr->departureTime[date][1] < 10) printf("0");
+		printf("%d : ", ptr->departureTime[date][1]);		// 출발 시간
+		if (ptr->departureTime[date][2] < 10) printf("0");
+		printf("%d", ptr->departureTime[date][2]);		// 
+		ptr = ptr->next;
 		printf("\n");
 	}
+	printf("\n");
 }
 
 void printMain() { //메인 메뉴 출력 함수
