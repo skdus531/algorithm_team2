@@ -24,7 +24,7 @@ void calRate(int *seatLv) {  //좌석 클래스에 따라 비행기표 가격 �
 	else if (*seatLv == 3) *seatLv -= 2;
 }
 
-void reservation(Graph* graph) {
+void reservation(Graph* graph) { //500개 랜덤 예약 함수
 	char name[10] = { '\0' };
 	int date[500], seatLv[500], rsv_num = 0;
 	char s[500], d[500];
@@ -40,7 +40,7 @@ void reservation(Graph* graph) {
 			s[k] = rand() % 26 + 'a';
 			d[k] = rand() % 26 + 'a';
 			dijkstra(graph, s[k] - 'a', d[k] - 'a', date[k], path);
-		} while (d[k] == s[k] || path[1][0] == -1); //출발지랑 도착지 같거나 경로 없는 경우
+		} while (d[k] == s[k] || path[1][0] == -1); //출발지랑 도착지 같거나 경로 없는 경우 제외
 	}
 	srand(GetTickCount());
 	for (int k = 0; k < 500; k++) {
@@ -50,7 +50,6 @@ void reservation(Graph* graph) {
 		}
 		name[i] = '\0';
 		rsv_num = calRsvNum(s[k], d[k], date[k]);
-		//중복확인 해야함
 		RB_INSERT(rsv_num, name, s[k], d[k], date[k], seatLv[k]);
 	}
 	return;
@@ -60,11 +59,9 @@ int main() {
 	Date date[31];			// 31개의 날짜
 	int t[200];				// 매일 200개의 출발시각
 	setDate(date, t);
-	//printDate(date);
 	Edge edges[100] = { 0 };
 	createEdge(edges); //path 100개 랜덤 설정
 	Graph* graph = createGraph(edges, date); //나라 위치 설정 & path 연결
-	//printGraph(graph); // 출발지 별 path 출력
 	unsigned char c;
 	
 	NILL = (Node*)malloc(sizeof(Node));
@@ -76,10 +73,8 @@ int main() {
 	printf("                  - Team 2 -                   \n");
 	printf(" ********************************************** \n");
 	
-	
 	reservation(graph); //500개 예약
 	
-	//shortestPath  >  dijkstra(graph, src, dest, date, path)로 검색
 	int path[10][2]; //경로 넘겨줄 배열
 	int flight;
 	int level;
@@ -121,9 +116,8 @@ int main() {
 				int height = RBTHeight(root);
 				int nodes = getNodeNum();
 			
-				//중복 확인하기
 				dijkstra(graph, s - 'a', d - 'a', date, path);
-				if (path[1][0] == -1) { //경로 없거나 출발지=도착지
+				if (path[1][0] == -1) { //경로 없거나 출발지=도착지인 
 					printf("\n [System] : Sorry, NO path for %c to %c.\n", s, d);
 					break;
 				}
@@ -181,13 +175,13 @@ int main() {
 				printf(" [System] : Thank you for using our service.\n\n");
 				exit(0);
 				break;
-			case '9':
+			case '9': //관리자 모드
 				printf(" [System] : Administer Mode.\n\n");
 				char name1[20] = { '\0' };
-				printf(" Password: ");  //이름 입력받기
+				printf(" Password: ");  //비밀 번호 입력받기
 				fgets(name1, 20, stdin);
 				name1[strlen(name1) - 1] = '\0';
-				if (!strcmp(name1, "qwerty")) {
+				if (!strcmp(name1, "qwerty")) { // 비밀번호 같으면 예약 번호 목록 출력
 					int height = RBTHeight(root);
 					printf("\n [Print Reservation Number]\n");
 					printf("===============================================\n");
