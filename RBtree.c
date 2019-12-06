@@ -13,11 +13,11 @@ Node* root;
 Node* NILL;
 static int nodeNum;
 
-int getNodeNum() {
+int getNodeNum() {  //노드 개수 리턴하는 함수
 	return nodeNum;
 }
 
-void printRsvNum(Node* node) {
+void printRsvNum(Node* node) {  //노드 key(예약번호) 출력하는 함수
 	if (node == NILL) {
 		return;
 	}
@@ -27,7 +27,7 @@ void printRsvNum(Node* node) {
 	return;
 }
 
-int isExist(int rsv_num) {
+int isExist(int rsv_num) { //예약번호 있는지 없는지 확인하는 함수
 	Node* temp = root;
 	int diff;
 	while (temp != NILL) {
@@ -282,7 +282,7 @@ void RB_DELETE1(Node* x) {
 	x->color = 'B';
 }
 
-void PRINT_RBT(int rsv_num) {
+void PRINT_RBT(int rsv_num) {  //노드의 구성요소들(이름, 출발, 도착지 날짜, 좌석 레벨 등)을 출력하는 함수
 	Node* x = Search(rsv_num);
 	char* seatLv;
 	printf("\n------------Reservation Information------------\n");
@@ -337,7 +337,7 @@ int RBTHeight(Node* x) {
 	}
 }
 
-void printNode(int prevHeight, int prevNodes) {
+void printNode(int prevHeight, int prevNodes) {  //노드개수와 트리 높이 출력하는 함수
 	int height = RBTHeight(root);
 	printf("-----------------------------------------------\n");
 	printf(" Before>\n- Number of nodes : %d\n- Height of the tree: %d\n\n", prevNodes, prevHeight);

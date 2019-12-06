@@ -8,14 +8,17 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-int calRsvNum(char s, char d, int date) {
+int calRsvNum(char s, char d, int date) {  //예약번호 계산 함수
 	srand(GetTickCount());
 	s -= 'a'; d -= 'a';
-	int ran = (rand() % 100000 )+100000 + date * 10000 + s* 100 + d;
+	int ran = (rand() % 100000 )+100000 + date * 10000 + s* 100 + d;  //예약번호 만들기
+	while (isExist(ran)) {  //예약 번호 중복 피하기
+		ran++;
+	}
 	return ran;
 }
 
-void calRate(int *seatLv) {
+void calRate(int *seatLv) {  //좌석 클래스에 따라 비행기표 가격 곱비율 계산
 	if (*seatLv == 1) *seatLv += 9;
 	else if (*seatLv == 2) *seatLv += 3;
 	else if (*seatLv == 3) *seatLv -= 2;
@@ -64,7 +67,6 @@ int main() {
 	//printGraph(graph); // 출발지 별 path 출력
 	unsigned char c;
 	
-	int rsv[600] = { 0, };
 	NILL = (Node*)malloc(sizeof(Node));
 	NILL->color = 'B';
 	root = NILL;
@@ -169,7 +171,7 @@ int main() {
 					price = flight * 1200 * (temp->seatLv);
 					printf("- Ticket price: %d won\n", price);
 				}
-				else printf("\n [System] : We can't find your reservation status. Please check your reservation again.");
+				else printf("\n [System] : We can't find your reservation status. Please check your reservation again.\n");
 					break;
 			}
 			case '4':
