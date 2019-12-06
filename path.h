@@ -34,13 +34,10 @@ Graph* createGraph(Edge* edges, Date* date);
 
 void createEdge(Edge* edges);
 
-void printGraph(Graph * graph);
-
 void printMain();
 
 void dijkstra(Graph* graph, int s, int d, int date, int shortestPath[10][2]);
 
 int compare(int a[3]);
-
 
 int printPath(Graph* graph, int path[10][2], int i);
