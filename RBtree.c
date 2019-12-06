@@ -17,6 +17,16 @@ int getNodeNum() {
 	return nodeNum;
 }
 
+void printRsvNum(Node* node) {
+	if (node == NILL) {
+		return;
+	}
+	printRsvNum(node->leftChild);
+	printf("%d\n", node->rsv_num);
+	printRsvNum(node->rightChild);
+	return;
+}
+
 int isExist(int rsv_num) {
 	Node* temp = root;
 	int diff;
