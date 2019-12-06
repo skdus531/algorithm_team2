@@ -127,7 +127,7 @@ void printDate(Graph* graph) {
 		if (ptr->departureTime[date][1] < 10) printf("0");
 		printf("%d : ", ptr->departureTime[date][1]);		// 출발 시간
 		if (ptr->departureTime[date][2] < 10) printf("0");
-		printf("%d", ptr->departureTime[date][2]);		// 
+		printf("%d", ptr->departureTime[date][2]);		// 출발 분
 		ptr = ptr->next;
 		printf("\n");
 	}
