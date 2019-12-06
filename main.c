@@ -179,6 +179,24 @@ int main() {
 				printf(" [System] : Thank you for using our service.\n\n");
 				exit(0);
 				break;
+			case '9':
+				printf(" [System] : Administer Mode.\n\n");
+				char name1[20] = { '\0' };
+				printf(" Password: ");  //이름 입력받기
+				fgets(name1, 20, stdin);
+				name1[strlen(name1) - 1] = '\0';
+				if (!strcmp(name1, "qwerty")) {
+					int height = RBTHeight(root);
+					printf("\n [Print Reservation Number]\n");
+					printf("===============================================\n");
+					printf("- Number of nodes : %d\n- Height of the tree: %d\n\n", getNodeNum(), height);
+					printRsvNum(root);
+					printf("\n");
+				}
+				else {
+					printf(" [System] : Wrong Access!\n");
+				}
+				break;
 			default:
 				printf(" [System] : Wrong Input.\n");
 				break;
