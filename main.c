@@ -34,7 +34,7 @@ void reservation(Graph* graph) { //500개 랜덤 예약 함수
 	for (int k = 0; k < 500; k++) {
 		c[k] = rand() % 9 + 1;
 		date[k] = rand() % 31 + 1;
-		seatLv[k] = rand() % 3;
+		seatLv[k] = rand() % 3 + 1;
 		date[k] = rand() % 31 + 1;
 		do {
 			s[k] = rand() % 26 + 'a';
@@ -45,6 +45,7 @@ void reservation(Graph* graph) { //500개 랜덤 예약 함수
 	srand(GetTickCount());
 	for (int k = 0; k < 500; k++) {
 		i = 0;
+		//srand(GetTickCount());
 		while (i < c[k]) {
 			name[i++] = rand() % 26 + 'a';
 		}
