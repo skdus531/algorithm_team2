@@ -25,7 +25,6 @@ void calRate(int *seatLv) {  //좌석 클래스에 따라 비행기표 가격 �
 }
 
 void reservation(Graph* graph) { //500개 랜덤 예약 함수
-	char name[10] = { '\0' };
 	int date[500], seatLv[500], rsv_num = 0;
 	char s[500], d[500];
 	int c[500], i = 0; //값하나씩 생성해서 바로 넣으려고 했더니 가끔 똑같은 값들이 연속적으로 나와서 배열에 저장
@@ -44,8 +43,8 @@ void reservation(Graph* graph) { //500개 랜덤 예약 함수
 	}
 	srand(GetTickCount());
 	for (int k = 0; k < 500; k++) {
+		char name[10] = { '\0' };
 		i = 0;
-		//srand(GetTickCount());
 		while (i < c[k]) {
 			name[i++] = rand() % 26 + 'a';
 		}
@@ -182,7 +181,7 @@ int main() {
 				printf(" Password: ");  //비밀 번호 입력받기
 				fgets(name1, 20, stdin);
 				name1[strlen(name1) - 1] = '\0';
-				if (!strcmp(name1, "qwerty")) { // 비밀번호 같으면 예약 번호 목록 출력
+				if (!strcmp(name1, "algorithm2")) { // 비밀번호 같으면 예약 번호 목록 출력
 					int height = RBTHeight(root);
 					printf("\n [Print Reservation Number]\n");
 					printf("===============================================\n");
