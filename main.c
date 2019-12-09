@@ -169,6 +169,9 @@ int main() {
 					break;
 			}
 			case '4':
+				printf(" [Time Table]\n");
+				printf("===============================================\n");
+			
 				printDate(graph);
 				break;
 			case '5':
