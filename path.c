@@ -118,7 +118,7 @@ void createEdge(Edge* edges) { //100개의 출발지->도착지 경로 설정
 void printDate(Graph* graph) {
 	int date;		// 출발날짜
 	char src;		// 출발지
-	printf("Insert your depature date and source city : ");		// 31 e 처럼 날짜 출발지 입력
+	printf("Insert your departure date and source city : ");		// 31 e 처럼 날짜 출발지 입력
 	scanf("%d %c", &date, &src);
 	printf("\nDESTINATION\tTIME\n");
 	Dest* ptr = graph->head[(int)(src - 'a')];		// 출발지에 대응되는 첫번째 목적지
