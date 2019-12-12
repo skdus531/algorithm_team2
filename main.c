@@ -43,7 +43,7 @@ void reservation(Graph* graph) { //500개 랜덤 예약 함수
 	}
 	srand(GetTickCount());
 	for (int k = 0; k < 500; k++) {
-		char name[10] = { '\0' };
+		char* name = (char*)malloc(sizeof(char)*10);
 		i = 0;
 		while (i < c[k]) {
 			name[i++] = rand() % 26 + 'a';
@@ -93,11 +93,11 @@ int main() {
 				printf(" [Reservation]\n");
 				printf("===============================================\n");
 				
-				char name[10] = { '\0' };
+				char* name = (char*)malloc(sizeof(char)*20);
 				int date, seatLv, rsv_num = 0;
 				char s, d;
 				printf(" Please enter your name: ");  //이름 입력받기
-				fgets(name, 10, stdin);
+				fgets(name, 20, stdin);
 				name[strlen(name) - 1] = '\0';
 
 				printf(" Please enter the departure city (a~z): "); //source city 입력받기
