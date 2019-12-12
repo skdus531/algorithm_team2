@@ -13,11 +13,11 @@ Node* root;
 Node* NILL;
 static int nodeNum;
 
-int getNodeNum() {  //³ëµå °³¼ö ¸®ÅÏÇÏ´Â ÇÔ¼ö
+int getNodeNum() {  //ë…¸ë“œ ê°œìˆ˜ ë¦¬í„´í•˜ëŠ” í•¨ìˆ˜
 	return nodeNum;
 }
 
-void printRsvNum(Node* node) {  //³ëµå key(¿¹¾à¹øÈ£) Ãâ·ÂÇÏ´Â ÇÔ¼ö
+void printRsvNum(Node* node) {  //ë…¸ë“œ key(ì˜ˆì•½ë²ˆí˜¸) ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜
 	if (node == NILL) {
 		return;
 	}
@@ -27,7 +27,7 @@ void printRsvNum(Node* node) {  //³ëµå key(¿¹¾à¹øÈ£) Ãâ·ÂÇÏ´Â ÇÔ¼ö
 	return;
 }
 
-int isExist(int rsv_num) { //¿¹¾à¹øÈ£ ÀÖ´ÂÁö ¾ø´ÂÁö È®ÀÎÇÏ´Â ÇÔ¼ö
+int isExist(int rsv_num) { //ì˜ˆì•½ë²ˆí˜¸ ìžˆëŠ”ì§€ ì—†ëŠ”ì§€ í™•ì¸í•˜ëŠ” í•¨ìˆ˜
 	Node* temp = root;
 	int diff;
 	while (temp != NILL) {
@@ -42,7 +42,7 @@ int isExist(int rsv_num) { //¿¹¾à¹øÈ£ ÀÖ´ÂÁö ¾ø´ÂÁö È®ÀÎÇÏ´Â ÇÔ¼ö
 	return 0;
 }
 
-void LR(Node* x) {
+void LR(Node* x) { //left rotation
 	Node* y;
 
 	y = x->rightChild;
@@ -58,7 +58,7 @@ void LR(Node* x) {
 	x->parent = y;
 }
 
-void RR(Node* x) {
+void RR(Node* x) { //right rotation
 	Node* y;
 
 	y = x->leftChild;
@@ -75,7 +75,7 @@ void RR(Node* x) {
 	x->parent = y;
 }
 
-void RB_INSERT(int rsv_num, char* name, int s, int d, int date, int seatLv) {
+void RB_INSERT(int rsv_num, char* name, int s, int d, int date, int seatLv) { //RBtree insert function
 	Node* z, *x, *y;
 	z = (Node*)malloc(sizeof(Node));
 
@@ -109,7 +109,7 @@ void RB_INSERT(int rsv_num, char* name, int s, int d, int date, int seatLv) {
 	RB_INSERT1(z);
 }
 
-void RB_INSERT1(Node* z) {
+void RB_INSERT1(Node* z) { //fixing after insertion
 	while (z->parent->color == 'R') {
 
 		if (z->parent == z->parent->parent->leftChild) {
@@ -158,7 +158,7 @@ void RB_INSERT1(Node* z) {
 	root->color = 'B';
 }
 
-void RB_DELETE(int rsv_num) {
+void RB_DELETE(int rsv_num) { //RBtree delete function
 	Node* y, *x, *z;
 	z = root;
 	while (z != NILL && rsv_num != z->rsv_num) {
@@ -212,7 +212,7 @@ void RB_DELETE(int rsv_num) {
 	}
 }
 
-void RB_DELETE1(Node* x) {
+void RB_DELETE1(Node* x) { //fixing after deletion
 	Node* w;
 
 	while (x != root && x->color == 'B') {
@@ -282,7 +282,7 @@ void RB_DELETE1(Node* x) {
 	x->color = 'B';
 }
 
-void PRINT_RBT(int rsv_num) {  //³ëµåÀÇ ±¸¼º¿ä¼Òµé(ÀÌ¸§, Ãâ¹ß, µµÂøÁö ³¯Â¥, ÁÂ¼® ·¹º§ µî)À» Ãâ·ÂÇÏ´Â ÇÔ¼ö
+void PRINT_RBT(int rsv_num) {  //ë…¸ë“œì˜ êµ¬ì„±ìš”ì†Œë“¤(ì´ë¦„, ì¶œë°œ, ë„ì°©ì§€ ë‚ ì§œ, ì¢Œì„ ë ˆë²¨ ë“±)ì„ ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜
 	Node* x = Search(rsv_num);
 	char* seatLv;
 	printf("\n------------Reservation Information------------\n");
@@ -295,7 +295,7 @@ void PRINT_RBT(int rsv_num) {  //³ëµåÀÇ ±¸¼º¿ä¼Òµé(ÀÌ¸§, Ãâ¹ß, µµÂøÁö ³¯Â¥, ÁÂ¼®
 	printf("- Level of seat : %s\n", seatLv);
 }
 
-void Transplant(Node* u, Node* v) {
+void Transplant(Node* u, Node* v) { //Node transplant
 	if (u->parent == NILL) root = v;
 	else if (u == u->parent->leftChild) u->parent->leftChild = v;
 	else u->parent->rightChild = v;
@@ -304,7 +304,7 @@ void Transplant(Node* u, Node* v) {
 }
 
 
-Node* Search(int rsv_num) {
+Node* Search(int rsv_num) { //Search Node with input reservation number
 	Node* x;
 	x = root;
 	while (x != NILL && x->rsv_num != rsv_num) {
@@ -315,14 +315,14 @@ Node* Search(int rsv_num) {
 	return x;
 }
 
-Node* minimum(Node* x) {
+Node* minimum(Node* x) { // Find minimum value Node in RBtree
 	while (x->leftChild != NILL) {
 		x = x->leftChild;
 	}
 	return x;
 }
 
-int RBTHeight(Node* x) {
+int RBTHeight(Node* x) { //return height of RBTree
 	if (x == NILL)
 		return 0;
 	else {
@@ -337,7 +337,7 @@ int RBTHeight(Node* x) {
 	}
 }
 
-void printNode(int prevHeight, int prevNodes) {  //³ëµå°³¼ö¿Í Æ®¸® ³ôÀÌ Ãâ·ÂÇÏ´Â ÇÔ¼ö
+void printNode(int prevHeight, int prevNodes) {  //ë…¸ë“œê°œìˆ˜ì™€ íŠ¸ë¦¬ ë†’ì´ ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜
 	int height = RBTHeight(root);
 	printf("-----------------------------------------------\n");
 	printf(" Before>\n- Number of nodes : %d\n- Height of the tree: %d\n\n", prevNodes, prevHeight);
